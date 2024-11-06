@@ -54,6 +54,7 @@ struct profileView: View {
 
 struct ActivityGridView: View {
     @StateObject var viewModel = ActivitiesViewModel()
+    @StateObject var connector = WatchConnector()
     
     var body: some View {
         NavigationStack() {
@@ -79,7 +80,7 @@ struct ActivityGridView: View {
                 }
                 .navigationTitle("🎯 Start A Workout")
                 .navigationDestination(for: Activities.self){ activitySelected in
-                    ActivityDetailView(activity: activitySelected, viewModel: viewModel)
+                    ActivityDetailView(activity: activitySelected, viewModel: viewModel, connector: connector)
                 }
             }
         }

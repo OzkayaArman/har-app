@@ -77,32 +77,38 @@
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		CB0539302CACA01E00864980 /* HAR APP */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "HAR APP";
+			name = "HAR APP";
+			path = "../HAR APP";
 			sourceTree = "<group>";
 		};
 		CB0539412CACA02200864980 /* HAR APPTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "HAR APPTests";
+			name = "HAR APPTests";
+			path = "../HAR APPTests";
 			sourceTree = "<group>";
 		};
 		CB05394B2CACA02200864980 /* HAR APPUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "HAR APPUITests";
+			name = "HAR APPUITests";
+			path = "../HAR APPUITests";
 			sourceTree = "<group>";
 		};
 		CBD7868F2CD6CECE0034A24C /* WatchHARApp Watch App */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "WatchHARApp Watch App";
+			name = "WatchHARApp Watch App";
+			path = "../WatchHARApp Watch App";
 			sourceTree = "<group>";
 		};
 		CBD786A02CD6CED00034A24C /* WatchHARApp Watch AppTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "WatchHARApp Watch AppTests";
+			name = "WatchHARApp Watch AppTests";
+			path = "../WatchHARApp Watch AppTests";
 			sourceTree = "<group>";
 		};
 		CBD786AA2CD6CED00034A24C /* WatchHARApp Watch AppUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "WatchHARApp Watch AppUITests";
+			name = "WatchHARApp Watch AppUITests";
+			path = "../WatchHARApp Watch AppUITests";
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -158,13 +164,7 @@
 		CB0539252CACA01E00864980 = {
 			isa = PBXGroup;
 			children = (
-				CB0539302CACA01E00864980 /* HAR APP */,
-				CB0539412CACA02200864980 /* HAR APPTests */,
-				CB05394B2CACA02200864980 /* HAR APPUITests */,
-				CBD7868F2CD6CECE0034A24C /* WatchHARApp Watch App */,
-				CBD786A02CD6CED00034A24C /* WatchHARApp Watch AppTests */,
-				CBD786AA2CD6CED00034A24C /* WatchHARApp Watch AppUITests */,
-				CBD786BE2CD6CF340034A24C /* Frameworks */,
+				CB9601F52CDBE0E400C69719 /* Overall App */,
 				CB05392F2CACA01E00864980 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -180,6 +180,20 @@
 				CBD786A72CD6CED00034A24C /* WatchHARApp Watch AppUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		CB9601F52CDBE0E400C69719 /* Overall App */ = {
+			isa = PBXGroup;
+			children = (
+				CB0539302CACA01E00864980 /* HAR APP */,
+				CB0539412CACA02200864980 /* HAR APPTests */,
+				CB05394B2CACA02200864980 /* HAR APPUITests */,
+				CBD7868F2CD6CECE0034A24C /* WatchHARApp Watch App */,
+				CBD786A02CD6CED00034A24C /* WatchHARApp Watch AppTests */,
+				CBD786AA2CD6CED00034A24C /* WatchHARApp Watch AppUITests */,
+				CBD786BE2CD6CF340034A24C /* Frameworks */,
+			);
+			path = "Overall App";
 			sourceTree = "<group>";
 		};
 		CBD786BE2CD6CF340034A24C /* Frameworks */ = {

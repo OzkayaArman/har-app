@@ -21,5 +21,4 @@ final class ActivitiesViewModel: ObservableObject {
     
     var isShowingDetailView = false
     
-    var watchConnector = WatchConnector()
 }

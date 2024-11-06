@@ -11,6 +11,7 @@ struct ActivityDetailView: View {
     //Struct name is Activities
     var activity: Activities
     @ObservedObject var viewModel: ActivitiesViewModel
+    @ObservedObject var connector: WatchConnector
     
     var body: some View {
         VStack{
@@ -24,7 +25,7 @@ struct ActivityDetailView: View {
             Spacer()
             
             Button {
-                viewModel.watchConnector.sendStartActivity()
+                //connector.sendStartActivity()
             } label:{
                 Label("Start Activity", systemImage: "play.fill")
             }
@@ -36,5 +37,5 @@ struct ActivityDetailView: View {
 }
 
 #Preview {
-    ActivityDetailView(activity: MockData.sampleActivity, viewModel: ActivitiesViewModel() )
+    ActivityDetailView(activity: MockData.sampleActivity, viewModel: ActivitiesViewModel(), connector: WatchConnector() )
 }

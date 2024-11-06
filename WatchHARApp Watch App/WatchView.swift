@@ -10,7 +10,7 @@ import SwiftUI
 struct WatchView: View {
     
     @StateObject var viewModel = ViewModel()
-    //@StateObject var watchConnector = WatchToIosConnector()
+    @StateObject var watchConnector = WatchToIOSConnector()
     
     var body: some View {
         ScrollView{
@@ -62,6 +62,8 @@ struct WatchView: View {
             }else{
                 Button{
                     viewModel.stopCollectingSensorData()
+                    sendDataToIos("This is a working test submission")
+                    print("The send button is activated")
                 }label:{
                     Label("Stop Workout", systemImage: "stop.fill" )
                 }
@@ -75,6 +77,11 @@ struct WatchView: View {
         .ignoresSafeArea()
 
     }
+    
+    func sendDataToIos(_ result: String){
+        watchConnector.sendDataToIOS(data: result)
+    }
+    
     
 }
 

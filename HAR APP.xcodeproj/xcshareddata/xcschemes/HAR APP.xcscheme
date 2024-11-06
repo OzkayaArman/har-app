@@ -94,11 +94,6 @@
             value = ""
             isEnabled = "YES">
          </EnvironmentVariable>
-         <EnvironmentVariable
-            key = ""
-            value = ""
-            isEnabled = "YES">
-         </EnvironmentVariable>
       </EnvironmentVariables>
    </LaunchAction>
    <ProfileAction
