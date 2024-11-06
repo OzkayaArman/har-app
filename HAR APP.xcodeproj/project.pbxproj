@@ -6,6 +6,12 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		CB0180FD2CBEB8B3000FBA3C /* SwiftCSVEncoder in Frameworks */ = {isa = PBXBuildFile; productRef = CB0180FC2CBEB8B3000FBA3C /* SwiftCSVEncoder */; };
+		CBD786B12CD6CED10034A24C /* WatchHARApp Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = CBD7868E2CD6CECE0034A24C /* WatchHARApp Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		CBD786C02CD6CF350034A24C /* WatchConnectivity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CBD786BF2CD6CF350034A24C /* WatchConnectivity.framework */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		CB05393F2CACA02200864980 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -21,12 +27,51 @@
 			remoteGlobalIDString = CB05392D2CACA01E00864980;
 			remoteInfo = "HAR APP";
 		};
+		CBD7869E2CD6CED00034A24C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CB0539262CACA01E00864980 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CBD7868D2CD6CECE0034A24C;
+			remoteInfo = "WatchHARApp Watch App";
+		};
+		CBD786A82CD6CED00034A24C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CB0539262CACA01E00864980 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CBD7868D2CD6CECE0034A24C;
+			remoteInfo = "WatchHARApp Watch App";
+		};
+		CBD786AF2CD6CED10034A24C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CB0539262CACA01E00864980 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CBD7868D2CD6CECE0034A24C;
+			remoteInfo = "WatchHARApp Watch App";
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		CBD786B52CD6CED10034A24C /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				CBD786B12CD6CED10034A24C /* WatchHARApp Watch App.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		CB05392E2CACA01E00864980 /* HAR APP.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "HAR APP.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CB05393E2CACA02200864980 /* HAR APPTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "HAR APPTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CB0539482CACA02200864980 /* HAR APPUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "HAR APPUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CBD7868E2CD6CECE0034A24C /* WatchHARApp Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "WatchHARApp Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CBD7869D2CD6CED00034A24C /* WatchHARApp Watch AppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "WatchHARApp Watch AppTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CBD786A72CD6CED00034A24C /* WatchHARApp Watch AppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "WatchHARApp Watch AppUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CBD786BF2CD6CF350034A24C /* WatchConnectivity.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WatchConnectivity.framework; path = System/Library/Frameworks/WatchConnectivity.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -45,6 +90,21 @@
 			path = "HAR APPUITests";
 			sourceTree = "<group>";
 		};
+		CBD7868F2CD6CECE0034A24C /* WatchHARApp Watch App */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "WatchHARApp Watch App";
+			sourceTree = "<group>";
+		};
+		CBD786A02CD6CED00034A24C /* WatchHARApp Watch AppTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "WatchHARApp Watch AppTests";
+			sourceTree = "<group>";
+		};
+		CBD786AA2CD6CED00034A24C /* WatchHARApp Watch AppUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "WatchHARApp Watch AppUITests";
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,6 +112,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CB0180FD2CBEB8B3000FBA3C /* SwiftCSVEncoder in Frameworks */,
+				CBD786C02CD6CF350034A24C /* WatchConnectivity.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -69,6 +131,27 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		CBD7868B2CD6CECE0034A24C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CBD7869A2CD6CED00034A24C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CBD786A42CD6CED00034A24C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -78,6 +161,10 @@
 				CB0539302CACA01E00864980 /* HAR APP */,
 				CB0539412CACA02200864980 /* HAR APPTests */,
 				CB05394B2CACA02200864980 /* HAR APPUITests */,
+				CBD7868F2CD6CECE0034A24C /* WatchHARApp Watch App */,
+				CBD786A02CD6CED00034A24C /* WatchHARApp Watch AppTests */,
+				CBD786AA2CD6CED00034A24C /* WatchHARApp Watch AppUITests */,
+				CBD786BE2CD6CF340034A24C /* Frameworks */,
 				CB05392F2CACA01E00864980 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -88,8 +175,19 @@
 				CB05392E2CACA01E00864980 /* HAR APP.app */,
 				CB05393E2CACA02200864980 /* HAR APPTests.xctest */,
 				CB0539482CACA02200864980 /* HAR APPUITests.xctest */,
+				CBD7868E2CD6CECE0034A24C /* WatchHARApp Watch App.app */,
+				CBD7869D2CD6CED00034A24C /* WatchHARApp Watch AppTests.xctest */,
+				CBD786A72CD6CED00034A24C /* WatchHARApp Watch AppUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		CBD786BE2CD6CF340034A24C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				CBD786BF2CD6CF350034A24C /* WatchConnectivity.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -102,16 +200,19 @@
 				CB05392A2CACA01E00864980 /* Sources */,
 				CB05392B2CACA01E00864980 /* Frameworks */,
 				CB05392C2CACA01E00864980 /* Resources */,
+				CBD786B52CD6CED10034A24C /* Embed Watch Content */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				CBD786B02CD6CED10034A24C /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				CB0539302CACA01E00864980 /* HAR APP */,
 			);
 			name = "HAR APP";
 			packageProductDependencies = (
+				CB0180FC2CBEB8B3000FBA3C /* SwiftCSVEncoder */,
 			);
 			productName = "HAR APP";
 			productReference = CB05392E2CACA01E00864980 /* HAR APP.app */;
@@ -163,6 +264,74 @@
 			productReference = CB0539482CACA02200864980 /* HAR APPUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		CBD7868D2CD6CECE0034A24C /* WatchHARApp Watch App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CBD786B22CD6CED10034A24C /* Build configuration list for PBXNativeTarget "WatchHARApp Watch App" */;
+			buildPhases = (
+				CBD7868A2CD6CECE0034A24C /* Sources */,
+				CBD7868B2CD6CECE0034A24C /* Frameworks */,
+				CBD7868C2CD6CECE0034A24C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				CBD7868F2CD6CECE0034A24C /* WatchHARApp Watch App */,
+			);
+			name = "WatchHARApp Watch App";
+			packageProductDependencies = (
+			);
+			productName = "WatchHARApp Watch App";
+			productReference = CBD7868E2CD6CECE0034A24C /* WatchHARApp Watch App.app */;
+			productType = "com.apple.product-type.application";
+		};
+		CBD7869C2CD6CED00034A24C /* WatchHARApp Watch AppTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CBD786B62CD6CED10034A24C /* Build configuration list for PBXNativeTarget "WatchHARApp Watch AppTests" */;
+			buildPhases = (
+				CBD786992CD6CED00034A24C /* Sources */,
+				CBD7869A2CD6CED00034A24C /* Frameworks */,
+				CBD7869B2CD6CED00034A24C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				CBD7869F2CD6CED00034A24C /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				CBD786A02CD6CED00034A24C /* WatchHARApp Watch AppTests */,
+			);
+			name = "WatchHARApp Watch AppTests";
+			packageProductDependencies = (
+			);
+			productName = "WatchHARApp Watch AppTests";
+			productReference = CBD7869D2CD6CED00034A24C /* WatchHARApp Watch AppTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		CBD786A62CD6CED00034A24C /* WatchHARApp Watch AppUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CBD786B92CD6CED10034A24C /* Build configuration list for PBXNativeTarget "WatchHARApp Watch AppUITests" */;
+			buildPhases = (
+				CBD786A32CD6CED00034A24C /* Sources */,
+				CBD786A42CD6CED00034A24C /* Frameworks */,
+				CBD786A52CD6CED00034A24C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				CBD786A92CD6CED00034A24C /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				CBD786AA2CD6CED00034A24C /* WatchHARApp Watch AppUITests */,
+			);
+			name = "WatchHARApp Watch AppUITests";
+			packageProductDependencies = (
+			);
+			productName = "WatchHARApp Watch AppUITests";
+			productReference = CBD786A72CD6CED00034A24C /* WatchHARApp Watch AppUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -170,7 +339,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1600;
+				LastSwiftUpdateCheck = 1610;
 				LastUpgradeCheck = 1600;
 				TargetAttributes = {
 					CB05392D2CACA01E00864980 = {
@@ -184,6 +353,17 @@
 						CreatedOnToolsVersion = 16.0;
 						TestTargetID = CB05392D2CACA01E00864980;
 					};
+					CBD7868D2CD6CECE0034A24C = {
+						CreatedOnToolsVersion = 16.1;
+					};
+					CBD7869C2CD6CED00034A24C = {
+						CreatedOnToolsVersion = 16.1;
+						TestTargetID = CBD7868D2CD6CECE0034A24C;
+					};
+					CBD786A62CD6CED00034A24C = {
+						CreatedOnToolsVersion = 16.1;
+						TestTargetID = CBD7868D2CD6CECE0034A24C;
+					};
 				};
 			};
 			buildConfigurationList = CB0539292CACA01E00864980 /* Build configuration list for PBXProject "HAR APP" */;
@@ -195,6 +375,9 @@
 			);
 			mainGroup = CB0539252CACA01E00864980;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				CB0180FB2CBEB8B3000FBA3C /* XCRemoteSwiftPackageReference "SwiftCSVEncoder" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = CB05392F2CACA01E00864980 /* Products */;
 			projectDirPath = "";
@@ -203,6 +386,9 @@
 				CB05392D2CACA01E00864980 /* HAR APP */,
 				CB05393D2CACA02200864980 /* HAR APPTests */,
 				CB0539472CACA02200864980 /* HAR APPUITests */,
+				CBD7868D2CD6CECE0034A24C /* WatchHARApp Watch App */,
+				CBD7869C2CD6CED00034A24C /* WatchHARApp Watch AppTests */,
+				CBD786A62CD6CED00034A24C /* WatchHARApp Watch AppUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -223,6 +409,27 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		CB0539462CACA02200864980 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CBD7868C2CD6CECE0034A24C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CBD7869B2CD6CED00034A24C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CBD786A52CD6CED00034A24C /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -253,6 +460,27 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		CBD7868A2CD6CECE0034A24C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CBD786992CD6CED00034A24C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CBD786A32CD6CED00034A24C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -265,6 +493,21 @@
 			isa = PBXTargetDependency;
 			target = CB05392D2CACA01E00864980 /* HAR APP */;
 			targetProxy = CB0539492CACA02200864980 /* PBXContainerItemProxy */;
+		};
+		CBD7869F2CD6CED00034A24C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CBD7868D2CD6CECE0034A24C /* WatchHARApp Watch App */;
+			targetProxy = CBD7869E2CD6CED00034A24C /* PBXContainerItemProxy */;
+		};
+		CBD786A92CD6CED00034A24C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CBD7868D2CD6CECE0034A24C /* WatchHARApp Watch App */;
+			targetProxy = CBD786A82CD6CED00034A24C /* PBXContainerItemProxy */;
+		};
+		CBD786B02CD6CED10034A24C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CBD7868D2CD6CECE0034A24C /* WatchHARApp Watch App */;
+			targetProxy = CBD786AF2CD6CED10034A24C /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -393,14 +636,18 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "HAR APP/HAR APP.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"HAR APP/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "";
+				DEVELOPMENT_TEAM = 425655S74W;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSMotionUsageDescription = "This app uses motion data to track your steps.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIRequiredDeviceCapabilities = accelerometer;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -421,14 +668,18 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "HAR APP/HAR APP.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"HAR APP/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "";
+				DEVELOPMENT_TEAM = 425655S74W;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSMotionUsageDescription = "This app uses motion data to track your steps.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIRequiredDeviceCapabilities = accelerometer;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -512,6 +763,140 @@
 			};
 			name = Release;
 		};
+		CBD786B32CD6CED10034A24C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"WatchHARApp Watch App/Preview Content\"";
+				DEVELOPMENT_TEAM = 425655S74W;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = WatchHARApp;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "Tutorial.HAR-APP";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "Tutorial.HAR-APP.watchkitapp";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 11.1;
+			};
+			name = Debug;
+		};
+		CBD786B42CD6CED10034A24C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"WatchHARApp Watch App/Preview Content\"";
+				DEVELOPMENT_TEAM = 425655S74W;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = WatchHARApp;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "Tutorial.HAR-APP";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "Tutorial.HAR-APP.watchkitapp";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 11.1;
+			};
+			name = Release;
+		};
+		CBD786B72CD6CED10034A24C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "Tutorial.WatchHARApp-Watch-AppTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/WatchHARApp Watch App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/WatchHARApp Watch App";
+				WATCHOS_DEPLOYMENT_TARGET = 11.1;
+			};
+			name = Debug;
+		};
+		CBD786B82CD6CED10034A24C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "Tutorial.WatchHARApp-Watch-AppTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/WatchHARApp Watch App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/WatchHARApp Watch App";
+				WATCHOS_DEPLOYMENT_TARGET = 11.1;
+			};
+			name = Release;
+		};
+		CBD786BA2CD6CED10034A24C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "Tutorial.WatchHARApp-Watch-AppUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_TARGET_NAME = "WatchHARApp Watch App";
+				WATCHOS_DEPLOYMENT_TARGET = 11.1;
+			};
+			name = Debug;
+		};
+		CBD786BB2CD6CED10034A24C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "Tutorial.WatchHARApp-Watch-AppUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_TARGET_NAME = "WatchHARApp Watch App";
+				WATCHOS_DEPLOYMENT_TARGET = 11.1;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -551,7 +936,53 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		CBD786B22CD6CED10034A24C /* Build configuration list for PBXNativeTarget "WatchHARApp Watch App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CBD786B32CD6CED10034A24C /* Debug */,
+				CBD786B42CD6CED10034A24C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CBD786B62CD6CED10034A24C /* Build configuration list for PBXNativeTarget "WatchHARApp Watch AppTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CBD786B72CD6CED10034A24C /* Debug */,
+				CBD786B82CD6CED10034A24C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CBD786B92CD6CED10034A24C /* Build configuration list for PBXNativeTarget "WatchHARApp Watch AppUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CBD786BA2CD6CED10034A24C /* Debug */,
+				CBD786BB2CD6CED10034A24C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		CB0180FB2CBEB8B3000FBA3C /* XCRemoteSwiftPackageReference "SwiftCSVEncoder" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/scottmatthewman/SwiftCSVEncoder";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.2.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		CB0180FC2CBEB8B3000FBA3C /* SwiftCSVEncoder */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CB0180FB2CBEB8B3000FBA3C /* XCRemoteSwiftPackageReference "SwiftCSVEncoder" */;
+			productName = SwiftCSVEncoder;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = CB0539262CACA01E00864980 /* Project object */;
 }

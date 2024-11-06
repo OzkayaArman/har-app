@@ -1,0 +1,15 @@
+{
+  "originHash" : "2a805fe774773119ee87b65ebbd88e1037d542f6b9da89eb935b2a9f8deb1f00",
+  "pins" : [
+    {
+      "identity" : "swiftcsvencoder",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/scottmatthewman/SwiftCSVEncoder",
+      "state" : {
+        "revision" : "d8108683ce9fbdb8a8767fe4a43b49a1891e4509",
+        "version" : "0.2.0"
+      }
+    }
+  ],
+  "version" : 3
+}

@@ -6,8 +6,50 @@
 	<dict>
 		<key>HAR APP.xcscheme_^#shared#^_</key>
 		<dict>
+			<key>isShown</key>
+			<true/>
 			<key>orderHint</key>
 			<integer>0</integer>
+		</dict>
+		<key>WatchHARApp Watch App.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>isShown</key>
+			<true/>
+			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
+	</dict>
+	<key>SuppressBuildableAutocreation</key>
+	<dict>
+		<key>CB05392D2CACA01E00864980</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>CB05393D2CACA02200864980</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>CB0539472CACA02200864980</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>CBD7868D2CD6CECE0034A24C</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>CBD7869C2CD6CED00034A24C</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>CBD786A62CD6CED00034A24C</key>
+		<dict>
+			<key>primary</key>
+			<true/>
 		</dict>
 	</dict>
 </dict>
