@@ -51,10 +51,11 @@ struct profileView: View {
         Spacer()
     }
 }
-
+//Activity grid view passes both the viewModel and watchConnector
+//To ActivityDetailView
 struct ActivityGridView: View {
+    //Creating instances of viewModel and connector
     @StateObject var viewModel = ActivitiesViewModel()
-    @StateObject var connector = WatchConnector()
     
     var body: some View {
         NavigationStack() {
@@ -80,7 +81,7 @@ struct ActivityGridView: View {
                 }
                 .navigationTitle("🎯 Start A Workout")
                 .navigationDestination(for: Activities.self){ activitySelected in
-                    ActivityDetailView(activity: activitySelected, viewModel: viewModel, connector: connector)
+                    ActivityDetailView(activity: activitySelected, viewModel: viewModel)
                 }
             }
         }

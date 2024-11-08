@@ -10,7 +10,6 @@ import SwiftUI
 struct WatchView: View {
     
     @StateObject var viewModel = ViewModel()
-    @StateObject var watchConnector = WatchToIOSConnector()
     
     var body: some View {
         ScrollView{
@@ -27,6 +26,7 @@ struct WatchView: View {
             
             Divider()
             VStack(alignment: .leading, spacing:8 ){
+                HeartRateView()
                 Text("User Acceleration")
                     .font(.headline)
                 Text(viewModel.accelerationValue ?? "No Data")
@@ -42,10 +42,9 @@ struct WatchView: View {
                 Text(viewModel.magnetometerValue ?? "No Data")
                     .font(.subheadline)
                     .padding(.bottom)
-                Text("Heading")
-                      .font(.headline)
+                
             }
-            .padding(.horizontal)
+            .padding()
             
             Spacer()
             
@@ -62,7 +61,6 @@ struct WatchView: View {
             }else{
                 Button{
                     viewModel.stopCollectingSensorData()
-                    sendDataToIos("This is a working test submission")
                     print("The send button is activated")
                 }label:{
                     Label("Stop Workout", systemImage: "stop.fill" )
@@ -74,12 +72,23 @@ struct WatchView: View {
         }
         
         .padding()
-        .ignoresSafeArea()
+        .ignoresSafeArea(.container, edges: .bottom)
 
     }
     
-    func sendDataToIos(_ result: String){
-        watchConnector.sendDataToIOS(data: result)
+    struct HeartRateView: View {
+
+        var body: some View {
+            VStack {
+                Image(systemName: "heart.square")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 40, height: 40)
+                Text("BPM")
+
+            }
+            .padding()
+        }
     }
     
     

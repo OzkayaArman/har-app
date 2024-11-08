@@ -56,11 +56,11 @@ struct ActivityIconView: View {
                 .resizable()
                 .frame(width: 90, height: 90)
             Text(activity.name)
-                .font(.title2)
+                .font(.subheadline)
                 .fontWeight(.semibold)
                 .foregroundColor(Color(.label))
                 .scaledToFit()
-                .minimumScaleFactor(0.6)
+                .minimumScaleFactor(0.5)
             }
             .padding()
             
