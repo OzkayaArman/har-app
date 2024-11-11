@@ -8,10 +8,64 @@
 import SwiftUI
 
 struct AccountView: View {
+    @State private var firstName = ""
+    @State private var lastName = ""
+    @State private var email = ""
+    @State private var birthdate = Date()
+    @State  private var accelerometer = true;
+    @State private var gyroscope = true;
+    @State private var magnetometer = true;
+    @State private var gps = false;
+    @State private var heartRateSensor = false;
+    @State private var music = false;
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        NavigationStack {
+            Form{
+                Section(header: Text("Personal Info")){
+                    TextField("First Name", text: $firstName)
+                    TextField("Last Name", text: $lastName)
+                    TextField("Email", text: $email)
+                        .keyboardType(.emailAddress)
+                        .autocapitalization(.none)
+                        .disableAutocorrection(true)
+                    DatePicker("Birthday", selection: $birthdate,
+                               displayedComponents: .date)
+                    
+                    Button{
+                        
+                    } label: {
+                        Text("Save Changes")
+                    }
+                    
+                }
+                Section(header: Text("Preferences")){
+                    Toggle("Accelerometer", isOn: $accelerometer)
+                    Toggle("Magnetometer", isOn: $magnetometer)
+                    Toggle("Gyroscope", isOn: $gyroscope)
+                    Toggle("Location Services: GPS", isOn: $gps)
+                    Toggle("Heart Rate Sensor", isOn: $heartRateSensor)
+                    Toggle("Music Listening Monitoring", isOn: $music)
+                    
+                }
+            }
+                .navigationTitle("My Account 👤")
+                .onAppear(perform: loadUserData)
+        }
     }
+    
+    func loadUserData() {
+        guard let appleUserData = UserDefaults.standard.data(forKey: "appleUser"),
+            let appleUser = try? JSONDecoder().decode(AppleUser.self, from: appleUserData) else { return }
+        firstName = appleUser.firstName
+        lastName = appleUser.lastName
+        email = appleUser.email
+
+    }
+
 }
+
+
 
 #Preview {
     AccountView()

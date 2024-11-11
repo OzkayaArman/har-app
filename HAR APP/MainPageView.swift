@@ -2,55 +2,46 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 struct MainPageView: View {
+    @StateObject var login =  loginModel()
     
     var body: some View {
-        ZStack{
-            VStack(){
-                //Displays top Bar
-                HStack {
-                    profileView(imageRef: "Image", userName: "Arman Özkaya")
-                } .background(.app)
-
-                ActivityGridView()
+        
+        
+        if(login.authenticated){
+            TabView{
+                    ActivityGridView()
+                        .navigationTitle("Home")
+            
+                    .tabItem{
+                        Image(systemName: "house" )
+                        Text("Home")
+                    }
+            
+                    AccountView()
+                        .navigationTitle("Account & Preferences")
+    
+                    .tabItem {
+                        Image(systemName: "person")
+                        Text("Account & Preferences")
+                    }
                 
-                
-            }
+            }.accentColor(Color("selectColor"))
+        }else{
+            LoginPage(login: login)
         }
+                
+            
     }
 }
 
-//Driver Method for preview
+
 struct MainPageView_Previews: PreviewProvider {
     static var previews: some View {
-        MainPageView()
+        MainPageView(login: loginModel())
     }
 }
 
 
-//Sets up the top bar
-struct profileView: View {
-    let imageRef: String
-    let userName: String
-    
-    var body: some View {
-        Image(imageRef)
-            .renderingMode(.original)
-            .resizable()
-            .frame(width: 70, height: 70)
-            .clipShape(.circle)
-            .padding()
-        
-        Text(userName)
-            .font(.title)
-        Spacer()
-        //Turn this image to a button
-        Image(systemName: "gearshape")
-            .resizable()
-            .renderingMode(.original)
-            .frame(width: 30, height: 30)
-        Spacer()
-    }
-}
 //Activity grid view passes both the viewModel and watchConnector
 //To ActivityDetailView
 struct ActivityGridView: View {
@@ -59,6 +50,7 @@ struct ActivityGridView: View {
     
     var body: some View {
         NavigationStack() {
+            Spacer()
             VStack{
                 //Button for recording a new activity
                 Button {
@@ -68,7 +60,7 @@ struct ActivityGridView: View {
                 }
                 .buttonStyle(.borderedProminent)
                 .controlSize(.large)
-                .foregroundColor(.black)
+                .foregroundColor(.white)
                 
                 ScrollView {
                     LazyVGrid(columns: viewModel.columns) {

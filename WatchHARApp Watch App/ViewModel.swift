@@ -20,6 +20,7 @@ struct SensorData{
     let magnetometerY: Any
     let magnetometerZ: Any
 }
+//GAP: https://medium.com/appledeveloperacademy-ufpe/swift-how-to-use-coremotion-to-obtain-sensorial-data-20b1b73a948a
 
 class ViewModel: ObservableObject{
     @Published var accelerationValue: String?

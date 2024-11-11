@@ -9,9 +9,10 @@ import SwiftUI
 
 @main
 struct HAR_APPApp: App {
+
     var body: some Scene {
         WindowGroup {
-            MainPageView()
+            MainPageView(login: loginModel())
         }
     }
 }
