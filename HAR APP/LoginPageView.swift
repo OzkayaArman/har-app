@@ -10,7 +10,7 @@ import AuthenticationServices
 import Foundation
 
 
-struct LoginPage: View {
+struct LoginPageView: View {
     
     @Environment(\.colorScheme) var colorScheme
     @ObservedObject var login: loginModel
@@ -69,6 +69,6 @@ struct LoginPage: View {
 
 struct LoginPage_Previews: PreviewProvider {
     static var previews: some View {
-        LoginPage(login: loginModel())
+        LoginPageView(login: loginModel())
     }
 }
