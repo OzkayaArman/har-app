@@ -8,6 +8,7 @@
 import Foundation
 import CoreMotion
 import SwiftUI
+import WatchKit
 
 struct SensorData{
     let accelerationX: Any
@@ -21,24 +22,32 @@ struct SensorData{
     let magnetometerZ: Any
 }
 //GAP: https://medium.com/appledeveloperacademy-ufpe/swift-how-to-use-coremotion-to-obtain-sensorial-data-20b1b73a948a
+// I have implemented startCollectingSensorData function, getMotion function, and publisher/private variables
+// by following the example in the URL above.
 
-class ViewModel: ObservableObject{
+class ViewModel: NSObject, ObservableObject, WKExtendedRuntimeSessionDelegate{
+    
     @Published var accelerationValue: String?
     @Published var gyroscopeValue: String?
     @Published var magnetometerValue: String?
-    //@Published var headingValue: String?
-    
-    
     @Published var isRecording = false
+    @Published var isExtended = false
+    
+    
+    
     var watchToIOSConnector: WatchToIOSConnector
-
-    
-    //Initialize an instance of cmmotionmanager responsible for handling sensor updates
+    private var session: WKExtendedRuntimeSession?
     private let motionManager = CMMotionManager()
-    
-    init() {
+
+    //Constructor initializes the ViewModel instance
+    //Has the override the NSObject initializer, which is a superclass of ViewModel
+    override init() {
+            //Initialize watchToIOSConnector property, this property is an instance of WatchToIOSConnector class
             self.watchToIOSConnector = WatchToIOSConnector()
-            self.watchToIOSConnector.viewModel = self // Pass ViewModel reference
+            super.init()
+            // The viewModel property of watchToIOSConnector instance is set to be self, enabling the connector to access viewModel's properties and methods
+            //This is crucial for the phone application to control the watch application
+            self.watchToIOSConnector.viewModel = self
         }
 
     // Properties to hold the sensor values
@@ -50,6 +59,11 @@ class ViewModel: ObservableObject{
     
     func startCollectingSensorData(){
         isRecording = true
+        
+        //Configure extended runtime session instance to enable the watch app to collect data after the user stops directly interacting with the app (Example: User Wrist Down)
+        session = WKExtendedRuntimeSession()
+        session?.delegate = self
+        session?.start()
         
         // Sets the update interval to 30 Hz
         motionManager.deviceMotionUpdateInterval = 1.0 / 30.0
@@ -86,8 +100,15 @@ class ViewModel: ObservableObject{
         accelerationValue = nil
         gyroscopeValue = nil
         magnetometerValue = nil
+        
+        //Stop the extended runtime
+        session?.invalidate()
+        session = nil
+        
     }
-
+    
+  
+    
     private func getMotion(motion: CMDeviceMotion?){
         //Unwrap the optional
         if let motion = motion {
@@ -111,8 +132,6 @@ class ViewModel: ObservableObject{
             """
 
             
-
-            
             let sensorData = SensorData(
                 accelerationX: Double(String(format: "%.5f", userAcceleration.x)) ?? userAcceleration.x,
                 accelerationY: Double(String(format: "%.5f", userAcceleration.y)) ?? userAcceleration.y,
@@ -132,5 +151,25 @@ class ViewModel: ObservableObject{
     }
     
     
+    func extendedRuntimeSessionDidStart(_ extendedRuntimeSession: WKExtendedRuntimeSession) {
+            print("Extended runtime session started successfully.")
+            isExtended = true
+        }
+
+    func extendedRuntimeSessionWillExpire(_ extendedRuntimeSession: WKExtendedRuntimeSession) {
+            print("Extended runtime session will expire soon. Saving data and cleaning up.")
+            stopCollectingSensorData()
+            // I will ad UI to alert the user that the session is ending
+        }
+
+    func extendedRuntimeSession(_ extendedRuntimeSession: WKExtendedRuntimeSession, didInvalidateWith reason: WKExtendedRuntimeSessionInvalidationReason, error: Error?) {
+            print("Extended runtime session ended with reason: \(reason)")
+            if let error = error {
+                print("Error: \(error.localizedDescription)")
+            }
+            stopCollectingSensorData()
+        }
+    
+
     
 }

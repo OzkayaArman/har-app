@@ -33,32 +33,48 @@ class WatchConnector: NSObject, WCSessionDelegate, ObservableObject{
         print("Message received from Watch: \(message)")
         
         DispatchQueue.main.async {
-               // Format the accelerometer data
-               let accelerationString = """
-               X: \(message["accelerometerX"] as? Double ?? 0), \n Y: \(message["accelerometerY"] as? Double ?? 0), \n Z: \(message["accelerometerZ"] as? Double ?? 0) \n
-               """
-               self.activityViewModel?.accelerationValue = accelerationString
-               print("Acceleration: \(accelerationString)")
-
-               // Format the gyroscope data
-               let gyroscopeString = """
-               X: \(message["gyroscopeX"] as? Double ?? 0), \n Y: \(message["gyroscopeY"] as? Double ?? 0), \n Z: \(message["gyroscopeZ"] as? Double ?? 0) \n
-               """
-               self.activityViewModel?.gyroscopeValue = gyroscopeString
-               print("Gyroscope: \(gyroscopeString)")
-
-               // Format the magnetometer data
-               let magnetometerString = """
-               X: \(message["magnetometerX"] as? Double ?? 0), \n Y: \(message["magnetometerY"] as? Double ?? 0), \n Z: \(message["magnetometerZ"] as? Double ?? 0) \n
-               """
-               self.activityViewModel?.magnetometerValue = magnetometerString
-               print("Magnetometer: \(magnetometerString)")
+            
+            // Pass accelerometer data to the ActivitiesViewModel
+            let accelerationStringX = "\(message["accelerometerX"] as? Double ?? 0)"
+            let accelerationStringY = "\(message["accelerometerY"] as? Double ?? 0)"
+            let accelerationStringZ = "\(message["accelerometerZ"] as? Double ?? 0)"
+               
+            
+            self.activityViewModel?.accelerationValueX = accelerationStringX
+            self.activityViewModel?.accelerationValueY = accelerationStringY
+            self.activityViewModel?.accelerationValueZ = accelerationStringZ
+            
+            print("Acceleration:")
+            print(accelerationStringX)
+            print(accelerationStringY)
+            print(accelerationStringZ)
+            
+            // Pass groscope data to the ActivitiesViewModel
+            let gyroscopeStringX = "\(message["gyroscopeX"] as? Double ?? 0)"
+            let gyroscopeStringY = "\(message["gyroscopeY"] as? Double ?? 0)"
+            let gyroscopeStringZ = "\(message["gyroscopeZ"] as? Double ?? 0)"
+            
+            self.activityViewModel?.gyroscopeValueX = gyroscopeStringX
+            self.activityViewModel?.gyroscopeValueY = gyroscopeStringY
+            self.activityViewModel?.gyroscopeValueZ = gyroscopeStringZ
+            
+               
+            // Pass magnotemeter data to the ActivitiesViewModel
+            let magnetometerStringX = " \(message["magnetometerX"] as? Double ?? 0)"
+            let magnetometerStringY = " \(message["magnetometerY"] as? Double ?? 0)"
+            let magnetometerStringZ = " \(message["magnetometerZ"] as? Double ?? 0)"
+            
+            self.activityViewModel?.magnetometerValueX = magnetometerStringX
+            self.activityViewModel?.magnetometerValueY = magnetometerStringY
+            self.activityViewModel?.magnetometerValueZ = magnetometerStringZ
+            
+            self.activityViewModel?.addSensorData()
            }
     }
 
     
-    //This function is called from activity detail view
-    func sendCommandToWatch(data: String){
+    //This function is called from activity detail view and sends back the status of successful watch pairing
+    func sendCommandToWatch(data: String) -> Bool{
         if session.isReachable{
             print("Iphone established a connection")
             
@@ -66,8 +82,10 @@ class WatchConnector: NSObject, WCSessionDelegate, ObservableObject{
                 "message": data
             ]
             session.sendMessage(data, replyHandler: nil)
+            return true
         }else {
-            print("The watch couldn't find a connected iphone")
+            print("The iphone couldn't find a connected iphone")
+            return false
         }
     }
 }

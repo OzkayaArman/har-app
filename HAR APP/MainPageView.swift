@@ -4,20 +4,24 @@ import UniformTypeIdentifiers
 struct MainPageView: View {
     @StateObject var login =  loginModel()
     
+    //Creating instance of viewModel class which will be passed down in view hierarchy
+    @StateObject var viewModel = ActivitiesViewModel()
+
     var body: some View {
         
         
         if(login.authenticated){
             TabView{
-                    ActivityGridView()
+                    ActivityGridView(viewModel: viewModel)
                         .navigationTitle("Home")
-            
+                
+
                     .tabItem{
                         Image(systemName: "house" )
                         Text("Home")
                     }
             
-                    AccountView()
+                AccountView(viewModel: viewModel)
                         .navigationTitle("Account & Preferences")
     
                     .tabItem {
@@ -27,7 +31,7 @@ struct MainPageView: View {
                 
             }.accentColor(Color("selectColor"))
         }else{
-            LoginPage(login: login)
+            LoginPageView(login: login)
         }
                 
             
@@ -42,12 +46,9 @@ struct MainPageView_Previews: PreviewProvider {
 }
 
 
-//Activity grid view passes both the viewModel and watchConnector
-//To ActivityDetailView
+//Activity grid view initializes and passes the viewModel to ActivityDetailView
 struct ActivityGridView: View {
-    //Creating instances of viewModel and connector
-    @StateObject var viewModel = ActivitiesViewModel()
-    
+    @ObservedObject var viewModel: ActivitiesViewModel
     var body: some View {
         NavigationStack() {
             Spacer()

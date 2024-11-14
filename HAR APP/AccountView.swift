@@ -19,6 +19,8 @@ struct AccountView: View {
     @State private var heartRateSensor = false;
     @State private var music = false;
     
+    @ObservedObject var viewModel: ActivitiesViewModel
+    
     var body: some View {
         NavigationStack {
             Form{
@@ -55,11 +57,9 @@ struct AccountView: View {
     }
     
     func loadUserData() {
-        guard let appleUserData = UserDefaults.standard.data(forKey: "appleUser"),
-            let appleUser = try? JSONDecoder().decode(AppleUser.self, from: appleUserData) else { return }
-        firstName = appleUser.firstName
-        lastName = appleUser.lastName
-        email = appleUser.email
+        firstName = viewModel.firstName ?? ""
+        lastName = viewModel.lastName ?? ""
+        email = viewModel.email ?? ""
 
     }
 
@@ -68,5 +68,5 @@ struct AccountView: View {
 
 
 #Preview {
-    AccountView()
+    AccountView(viewModel: ActivitiesViewModel())
 }

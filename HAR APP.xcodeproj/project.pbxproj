@@ -68,6 +68,7 @@
 		CB05392E2CACA01E00864980 /* HAR APP.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "HAR APP.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CB05393E2CACA02200864980 /* HAR APPTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "HAR APPTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CB0539482CACA02200864980 /* HAR APPUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "HAR APPUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CB9E81BC2CE37115004A0081 /* WatchHARApp-Watch-App-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "WatchHARApp-Watch-App-Info.plist"; sourceTree = "<group>"; };
 		CBD7868E2CD6CECE0034A24C /* WatchHARApp Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "WatchHARApp Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CBD7869D2CD6CED00034A24C /* WatchHARApp Watch AppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "WatchHARApp Watch AppTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CBD786A72CD6CED00034A24C /* WatchHARApp Watch AppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "WatchHARApp Watch AppUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -164,6 +165,7 @@
 		CB0539252CACA01E00864980 = {
 			isa = PBXGroup;
 			children = (
+				CB9E81BC2CE37115004A0081 /* WatchHARApp-Watch-App-Info.plist */,
 				CB9601F52CDBE0E400C69719 /* Overall App */,
 				CB05392F2CACA01E00864980 /* Products */,
 			);
@@ -788,6 +790,7 @@
 				DEVELOPMENT_TEAM = 425655S74W;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "WatchHARApp-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = WatchHARApp;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "Tutorial.HAR-APP";
@@ -818,6 +821,7 @@
 				DEVELOPMENT_TEAM = 425655S74W;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "WatchHARApp-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = WatchHARApp;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "Tutorial.HAR-APP";

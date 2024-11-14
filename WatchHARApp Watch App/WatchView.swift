@@ -13,9 +13,10 @@ struct WatchView: View {
     
     var body: some View {
         ScrollView{
-            Text("Workout Name")
+            Text(viewModel.isExtended ? "Extended" : "Not Extended")
                 .font(.title3)
-                .fontWeight(.semibold)
+                .scaledToFit()
+                .foregroundStyle(.red)
                 .padding(.bottom)
             Spacer()
             Text(viewModel.isRecording ? "Recording" : "Standby")
@@ -27,17 +28,17 @@ struct WatchView: View {
             Divider()
             VStack(alignment: .leading, spacing:8 ){
                 HeartRateView()
-                Text("User Acceleration")
+                Text("Accelerometer")
                     .font(.headline)
                 Text(viewModel.accelerationValue ?? "No Data")
                     .font(.subheadline)
                     .padding(.bottom)
-                Text("Rotation")
+                Text("Gyroscope Values")
                     .font(.headline)
                 Text(viewModel.gyroscopeValue ?? "No Data")
                     .font(.subheadline)
                     .padding(.bottom)
-                Text("Magnetic Vector")
+                Text("Magnetometer Values")
                     .font(.headline)
                 Text(viewModel.magnetometerValue ?? "No Data")
                     .font(.subheadline)
