@@ -68,6 +68,7 @@
 		CB05392E2CACA01E00864980 /* HAR APP.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "HAR APP.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CB05393E2CACA02200864980 /* HAR APPTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "HAR APPTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CB0539482CACA02200864980 /* HAR APPUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "HAR APPUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CB44E9032CE68F7D00A51762 /* HAR-APP-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "HAR-APP-Info.plist"; sourceTree = "<group>"; };
 		CB9E81BC2CE37115004A0081 /* WatchHARApp-Watch-App-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "WatchHARApp-Watch-App-Info.plist"; sourceTree = "<group>"; };
 		CBD7868E2CD6CECE0034A24C /* WatchHARApp Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "WatchHARApp Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CBD7869D2CD6CED00034A24C /* WatchHARApp Watch AppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "WatchHARApp Watch AppTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -165,6 +166,7 @@
 		CB0539252CACA01E00864980 = {
 			isa = PBXGroup;
 			children = (
+				CB44E9032CE68F7D00A51762 /* HAR-APP-Info.plist */,
 				CB9E81BC2CE37115004A0081 /* WatchHARApp-Watch-App-Info.plist */,
 				CB9601F52CDBE0E400C69719 /* Overall App */,
 				CB05392F2CACA01E00864980 /* Products */,
@@ -659,6 +661,7 @@
 				DEVELOPMENT_TEAM = 425655S74W;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "HAR-APP-Info.plist";
 				INFOPLIST_KEY_NSMotionUsageDescription = "This app uses motion data to track your steps.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -691,6 +694,7 @@
 				DEVELOPMENT_TEAM = 425655S74W;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "HAR-APP-Info.plist";
 				INFOPLIST_KEY_NSMotionUsageDescription = "This app uses motion data to track your steps.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

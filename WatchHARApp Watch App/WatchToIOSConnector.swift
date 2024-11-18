@@ -20,25 +20,21 @@ class WatchToIOSConnector: NSObject, WCSessionDelegate, ObservableObject {
         
     }
     
-    func sendDataToIOS(structData: SensorData){
-        if session.isReachable{
-            print("The watch established a connection")
-            print(structData)
-            
-            let data: [String: Any] = [
-                "accelerometerX": structData.accelerationX,
-                "accelerometerY": structData.accelerationY,
-                "accelerometerZ": structData.accelerationZ,
-                "gyroscopeX": structData.rotationX,
-                "gyroscopeY": structData.rotationY,
-                "gyroscopeZ": structData.rotationZ,
-                "magnetometerX": structData.magnetometerX,
-                "magnetometerY": structData.magnetometerY,
-                "magnetometerZ": structData.magnetometerZ
-            ]
-            session.sendMessage(data, replyHandler: nil)
-        }else {
-            print("The watch couldn't find a connected iphone")
+    func sendDataToIOS(structData: [SensorData]){
+        print(structData.description)
+        let tempDirectory = FileManager.default.temporaryDirectory
+        let fileURL = tempDirectory.appendingPathComponent("SensorData-\(Date().timeIntervalSince1970).json")
+        
+        do {
+            // Encode data and write to file
+            let jsonData = try JSONEncoder().encode(structData)
+            try jsonData.write(to: fileURL)
+                
+            // Transfer the file to the iPhone
+            session.transferFile(fileURL, metadata: ["fileType": "sensorData"])
+            print("File transfer initiated for \(fileURL)")
+        } catch {
+                print("Failed to write sensor data to file with error: \(error.localizedDescription)")
         }
     }
     

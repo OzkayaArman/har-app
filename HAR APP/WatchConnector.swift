@@ -29,47 +29,27 @@ class WatchConnector: NSObject, WCSessionDelegate, ObservableObject{
     }
     
     // Receiving Message From Apple Watch
-    func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
-        print("Message received from Watch: \(message)")
+    func session(_ session: WCSession, didReceive file: WCSessionFile) {
+        print("File received from Watch with metadata: \(String(describing: file.metadata))")
         
-        DispatchQueue.main.async {
+        do {
+            // Read the data from the received file URL
+            let data = try Data(contentsOf: file.fileURL)
             
-            // Pass accelerometer data to the ActivitiesViewModel
-            let accelerationStringX = "\(message["accelerometerX"] as? Double ?? 0)"
-            let accelerationStringY = "\(message["accelerometerY"] as? Double ?? 0)"
-            let accelerationStringZ = "\(message["accelerometerZ"] as? Double ?? 0)"
-               
+            // Attempt to decode the data as an array of SensorData
+            let receivedData = try JSONDecoder().decode([SensorData].self, from: data)
+            print("Received sensor data array: \(receivedData)")
             
-            self.activityViewModel?.accelerationValueX = accelerationStringX
-            self.activityViewModel?.accelerationValueY = accelerationStringY
-            self.activityViewModel?.accelerationValueZ = accelerationStringZ
+            // Pass the decoded sensor data array to your ActivitiesViewModel
+            DispatchQueue.main.async {
+                // Assuming your ActivitiesViewModel has a method to handle received sensor data
+                self.activityViewModel?.sensorData.append(contentsOf: receivedData)
+                self.activityViewModel?.addSensorData()
+            }
             
-            print("Acceleration:")
-            print(accelerationStringX)
-            print(accelerationStringY)
-            print(accelerationStringZ)
-            
-            // Pass groscope data to the ActivitiesViewModel
-            let gyroscopeStringX = "\(message["gyroscopeX"] as? Double ?? 0)"
-            let gyroscopeStringY = "\(message["gyroscopeY"] as? Double ?? 0)"
-            let gyroscopeStringZ = "\(message["gyroscopeZ"] as? Double ?? 0)"
-            
-            self.activityViewModel?.gyroscopeValueX = gyroscopeStringX
-            self.activityViewModel?.gyroscopeValueY = gyroscopeStringY
-            self.activityViewModel?.gyroscopeValueZ = gyroscopeStringZ
-            
-               
-            // Pass magnotemeter data to the ActivitiesViewModel
-            let magnetometerStringX = " \(message["magnetometerX"] as? Double ?? 0)"
-            let magnetometerStringY = " \(message["magnetometerY"] as? Double ?? 0)"
-            let magnetometerStringZ = " \(message["magnetometerZ"] as? Double ?? 0)"
-            
-            self.activityViewModel?.magnetometerValueX = magnetometerStringX
-            self.activityViewModel?.magnetometerValueY = magnetometerStringY
-            self.activityViewModel?.magnetometerValueZ = magnetometerStringZ
-            
-            self.activityViewModel?.addSensorData()
-           }
+        } catch {
+            print("Failed to decode sensor data from received file with error: \(error.localizedDescription)")
+        }
     }
 
     

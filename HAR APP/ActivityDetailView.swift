@@ -31,49 +31,17 @@ struct ActivityDetailView: View {
                 .font(.title3)
                 .fontWeight(.semibold)
                 .padding()
+                .alert(isPresented: $showAlert) {
+                        Alert(
+                            title: Text("Success"),
+                            message: Text("CSV file saved successfully!"),
+                            dismissButton: .default(Text("OK"))
+                        )
+                }
+
             
             
             Divider()
-            ScrollView{
-                VStack(alignment: .leading, spacing:8 ){
-                    Text("User Acceleration")
-                        .font(.headline)
-                    Text(viewModel.accelerationValueX ?? "No Data")
-                        .font(.subheadline)
-                        .padding(.bottom)
-                    Text(viewModel.accelerationValueY ?? "No Data")
-                        .font(.subheadline)
-                        .padding(.bottom)
-                    Text(viewModel.accelerationValueZ ?? "No Data")
-                        .font(.subheadline)
-                        .padding(.bottom)
-                    Text("Gyroscope Values")
-                        .font(.headline)
-                    Text(viewModel.gyroscopeValueX ?? "No Data")
-                        .font(.subheadline)
-                        .padding(.bottom)
-                    Text(viewModel.gyroscopeValueY ?? "No Data")
-                        .font(.subheadline)
-                        .padding(.bottom)
-                    Text(viewModel.gyroscopeValueZ ?? "No Data")
-                        .font(.subheadline)
-                        .padding(.bottom)
-
-                    Text("Magnetic Vector")
-                        .font(.headline)
-                    Text(viewModel.magnetometerValueX ?? "No Data")
-                        .font(.subheadline)
-                        .padding(.bottom)
-                    Text(viewModel.magnetometerValueY ?? "No Data")
-                        .font(.subheadline)
-                        .padding(.bottom)
-                    Text(viewModel.magnetometerValueZ ?? "No Data")
-                        .font(.subheadline)
-                        .padding(.bottom)
-            }
-
-                
-            }
             Spacer()
             if(!startActivity){
                 Button {
@@ -97,14 +65,6 @@ struct ActivityDetailView: View {
                                 dismissButton: .default(Text("OK"))
                             )
                         }
-                .alert(isPresented: $showAlert) {
-                        Alert(
-                            title: Text("Success"),
-                            message: Text("CSV file saved successfully!"),
-                            dismissButton: .default(Text("OK"))
-                        )
-                }
-
             }else{
                 Button {
                     let status = viewModel.watchConnector.sendCommandToWatch(data: "Stop")

@@ -17,6 +17,7 @@ struct LoginPageView: View {
     
     var body: some View {
             VStack{
+                Text("Sign In to HAR")
                 SignInWithAppleButton(
                     .signIn,
                     onRequest: configure,
@@ -70,5 +71,6 @@ struct LoginPageView: View {
 struct LoginPage_Previews: PreviewProvider {
     static var previews: some View {
         LoginPageView(login: loginModel())
+            .preferredColorScheme(.dark)
     }
 }

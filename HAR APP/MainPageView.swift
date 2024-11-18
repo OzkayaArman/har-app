@@ -14,8 +14,6 @@ struct MainPageView: View {
             TabView{
                     ActivityGridView(viewModel: viewModel)
                         .navigationTitle("Home")
-                
-
                     .tabItem{
                         Image(systemName: "house" )
                         Text("Home")
@@ -37,14 +35,6 @@ struct MainPageView: View {
             
     }
 }
-
-
-struct MainPageView_Previews: PreviewProvider {
-    static var previews: some View {
-        MainPageView(login: loginModel())
-    }
-}
-
 
 //Activity grid view initializes and passes the viewModel to ActivityDetailView
 struct ActivityGridView: View {
@@ -81,4 +71,11 @@ struct ActivityGridView: View {
     }
 }
 
-
+//This struct sets up the preview in xcode
+struct MainPageView_Previews: PreviewProvider {
+    static var previews: some View {
+        let login = loginModel()
+        login.authenticated = true
+        return MainPageView(login: login)
+    }
+}

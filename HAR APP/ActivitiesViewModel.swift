@@ -75,12 +75,6 @@ final class ActivitiesViewModel: ObservableObject {
         sensorData.removeAll()
     }
     
-        
-        
-//    // Method to generate CSV file from the data
-//    func exportDataToCSV() -> CSVFile {
-//        return CSVFile(data: sensorData, activityName: "ActivityData")
-//    }
     
     func loadUserData() {
         guard let appleUserData = UserDefaults.standard.data(forKey: "appleUser"),
