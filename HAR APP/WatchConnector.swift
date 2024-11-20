@@ -3,12 +3,23 @@ import Foundation
 import WatchConnectivity
 import SwiftUICore
 
+/*
+ The code contained in this file was written by following a youtube tutorial
+ the link for that tutorial is below
+ GAP: https://www.youtube.com/watch?v=QzwHU0Xu_EY&t=949s
+*/
 class WatchConnector: NSObject, WCSessionDelegate, ObservableObject{
     
-    
+    //The object that initiates communication between an IOS app and its companion watch os app.
     var session: WCSession
+    
+    /*
+    Weak reference avoids memory leaks, when the ActivitiesViewModel is deallocated, the activity
+    viewModel property in WatchConnector automatically becomes nil
+    */
     weak var activityViewModel: ActivitiesViewModel?
     
+    //Constructor
     init(session: WCSession = .default){
         self.session = session
         super.init()

@@ -17,7 +17,7 @@ struct LoginPageView: View {
     
     var body: some View {
             VStack{
-                Text("Sign In to HAR")
+                Text("Sign In")
                 SignInWithAppleButton(
                     .signIn,
                     onRequest: configure,

@@ -2,11 +2,17 @@ import Foundation
 import SwiftUICore
 import WatchConnectivity
 
+/*
+ The code contained in this file was written by following a youtube tutorial
+ the link for that tutorial is below
+ GAP: https://www.youtube.com/watch?v=QzwHU0Xu_EY&t=949s
+*/
 class WatchToIOSConnector: NSObject, WCSessionDelegate, ObservableObject {
     
-    
+    //The object that initiates communication between a Watch app and its companion iOS app.
     var session: WCSession
-    @Published var startActivity : String?
+    
+    //Weak reference avoids memory leaks, when the ViewModel is deallocated, the viewModel property in WatchToIOSConnector automatically becomes nil.
     weak var viewModel: ViewModel?
     
     init(session: WCSession = .default){
@@ -20,6 +26,7 @@ class WatchToIOSConnector: NSObject, WCSessionDelegate, ObservableObject {
         
     }
     
+    //This function sends a messsage From watch to Iphone
     func sendDataToIOS(structData: [SensorData]){
         print(structData.description)
         let tempDirectory = FileManager.default.temporaryDirectory

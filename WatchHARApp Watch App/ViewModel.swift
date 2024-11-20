@@ -10,6 +10,7 @@ import CoreMotion
 import SwiftUI
 import WatchKit
 
+//This structure will be filled in by the sensor data obtained from coremotion
 struct SensorData: Codable{
     var timestamp: Double
     var accelX: String
@@ -22,6 +23,7 @@ struct SensorData: Codable{
     var magY: String
     var magZ: String
     
+    // Computed Variable tod describe the sensor data
     var description: String {
             return """
             SensorData:
@@ -32,12 +34,16 @@ struct SensorData: Codable{
             """
         }
 }
-//GAP: https://medium.com/appledeveloperacademy-ufpe/swift-how-to-use-coremotion-to-obtain-sensorial-data-20b1b73a948a
-// I have implemented startCollectingSensorData function, getMotion function, and publisher/private variables
-// by following the example in the URL above.
+
+/*
+ GAP: https://medium.com/appledeveloperacademy-ufpe/swift-how-to-use-coremotion-to-obtain-sensorial-data-20b1b73a948a
+ GAP: https://developer.apple.com/documentation/coremotion/getting_processed_device-motion_data
+ I have implemented startCollectingSensorData function, getMotion function, and publisher/private variables
+ by following the example in the URL above and the developer documentation.
+*/
 
 class ViewModel: NSObject, ObservableObject, WKExtendedRuntimeSessionDelegate{
-    
+    //Published variables enable the WatchView to read and display sensor data
     @Published var accelerationValueX: String?
     @Published var accelerationValueY: String?
     @Published var accelerationValueZ: String?
@@ -49,109 +55,79 @@ class ViewModel: NSObject, ObservableObject, WKExtendedRuntimeSessionDelegate{
     @Published var magnetometerValueZ: String?
     
     @Published var isRecording = false
-    @Published var isExtended = false
-   
     
+    //Holds sensor data
     @Published var sensorData: [SensorData] = []
     
     
-    
-    var watchToIOSConnector: WatchToIOSConnector
+    //ViewModel class properties, marked with private for security best practices
+    private var watchToIOSConnector: WatchToIOSConnector
     private var session: WKExtendedRuntimeSession?
     private let motionManager = CMMotionManager()
-
-    //Constructor for the ViewModel which also initialized the watchToIOSConnector
-    override init() {
-            //Initialize watchToIOSConnector property, this property is an instance of WatchToIOSConnector class
-            self.watchToIOSConnector = WatchToIOSConnector()
-            super.init()
-            // The viewModel property of watchToIOSConnector instance is set to be self, enabling the connector to access viewModel's properties and methods
-            //This is crucial for the phone application to control the watch application
-            self.watchToIOSConnector.viewModel = self
-        }
-
+    
     // Properties to hold the sensor values
     private var userAcceleration: CMAcceleration = CMAcceleration()
     private var watchAttitude: CMAttitude = CMAttitude()
     private var magneticVector: CMCalibratedMagneticField = CMCalibratedMagneticField()
     
 
-    
+    //Constructor for the ViewModel which also initializes an instance of the watchToIOSConnector
+    override init() {
+                
+            //Initialize watchToIOSConnector property, this property is an instance of WatchToIOSConnector class
+            self.watchToIOSConnector = WatchToIOSConnector()
+            super.init()
+            
+            /*
+            The viewModel property of watchToIOSConnector instance is set to be self (an instance of ViewModel)
+            enabling the connector to access viewModel's properties and methods.
+            This is crucial for the phone application to control the watch application
+             */
+            self.watchToIOSConnector.viewModel = self
+        }
+
+    /*
+     This function sets up an extended runtime session for background watch app execution
+     Background execution enables sensor data collection regardless of wrist orientation
+     This is required because Apple Watch OS goes to sleep when user wrist is down
+     Sleeping apps can't collect data
+     
+     This function also sets up motion manager framework for sensor data collection
+     */
     func startCollectingSensorData(){
         isRecording = true
         
-        //Configure extended runtime session instance to enable the watch app to collect data after the user stops directly interacting with the app (Example: User Wrist Down)
+        //Configure extended runtime session
         session = WKExtendedRuntimeSession()
         session?.delegate = self
         session?.start()
         
-        // Sets the update interval to 30 Hz
+        // Sets the update interval of sensor read to 30 Hz
         motionManager.deviceMotionUpdateInterval = 1.0 / 30.0
         
+        //Variable that indicate the frame of reference for attitude-related motion data
+        //!! MAY NEED TO CHANGE
         let referenceFrame = CMAttitudeReferenceFrame.xMagneticNorthZVertical
+        
+        //Check whether the reference frame is contained in the device and whether device motion is available
         if (CMMotionManager.availableAttitudeReferenceFrames().contains(referenceFrame) && motionManager.isDeviceMotionAvailable) {
     
                 print("Starting to collect sensor data at 30 Hz")
                 
-                
-                //GAP: https://developer.apple.com/documentation/coremotion/getting_processed_device-motion_data
-                //Start updating the accelerometer sensor data
+                //Start reading sensor data
                 motionManager.startDeviceMotionUpdates(using: .xMagneticNorthZVertical, to: .main){ [weak self] (motion, error) in
-                    guard let self = self else {return}
-                    
+                    guard let self = self else {return} // Avoids memory leaks
                     if let error = error{
                         print("Error: \(error.localizedDescription)")
                     }
                     
-                    self.getMotion(motion: motion)
+                    self.getMotion(motion: motion) //call getMotion function
                     
                 }
-
-            
         }
 
-    } //End of startCollectingSensorData
+    } //End of startCollectingSensorData function
     
-    //This method creates the struct of type SensorData so that the CSV file can be created
-    func addSensorData(){
-        let timestamp = Date().timeIntervalSince1970
-        let newData = SensorData(timestamp: timestamp, accelX: accelerationValueX ?? "", accelY: accelerationValueY ?? "", accelZ: accelerationValueZ ?? "", gyroX: gyroscopeValueX ?? "",
-                                 gyroY: gyroscopeValueY ?? "", gyroZ: gyroscopeValueZ ?? "", magX: magnetometerValueX ?? "", magY: magnetometerValueY ?? "", magZ: magnetometerValueZ ?? "")
-            
-        sensorData.append(newData)
-        print(newData)
-        print("Sensor Data was added on the watch")
-    }
-    
-    
-    func stopCollectingSensorData() {
-        
-        // Stop updating sensor data
-        motionManager.stopDeviceMotionUpdates()
-        isRecording = false
-        
-        //Clean publisher variables
-        accelerationValueX = nil
-        accelerationValueY = nil
-        accelerationValueZ = nil
-
-        gyroscopeValueX = nil
-        gyroscopeValueY = nil
-        gyroscopeValueZ = nil
-
-        magnetometerValueX = nil
-        magnetometerValueY = nil
-        magnetometerValueZ = nil
-        
-        watchToIOSConnector.sendDataToIOS(structData: sensorData)
-        
-        //Stop the extended runtime
-        session?.invalidate()
-        session = nil
-        
-    }
-    
-  
     
     private func getMotion(motion: CMDeviceMotion?){
         //Unwrap the optional
@@ -177,34 +153,60 @@ class ViewModel: NSObject, ObservableObject, WKExtendedRuntimeSessionDelegate{
             
             //Update the array that stores each snapshot of sensor data: 3Ohz == 30 array elements per second
             addSensorData()
-            
-//            let sensorData = SensorData(
-//                timestamp: <>,
-//                ccelX: Double(String(format: "%.5f", userAcceleration.x)) ?? userAcceleration.x,
-//                accelY: Double(String(format: "%.5f", userAcceleration.y)) ?? userAcceleration.y,
-//                accelZ: Double(String(format: "%.5f", userAcceleration.z)) ?? userAcceleration.z,
-//                gyroX: Double(String(format: "%.5f", watchAttitude.pitch)) ?? watchAttitude.pitch,
-//                gyroY: Double(String(format: "%.5f", watchAttitude.yaw)) ?? watchAttitude.yaw,
-//                gyroZ: Double(String(format: "%.5f", watchAttitude.roll)) ?? watchAttitude.roll,
-//                magX: Double(String(format: "%.5f", magneticVector.field.x)) ?? magneticVector.field.x,
-//                magY: Double(String(format: "%.5f", magneticVector.field.y)) ?? magneticVector.field.y,
-//                magZ: Double(String(format: "%.5f", magneticVector.field.z)) ?? magneticVector.field.z
-//            )
-            
-  //          watchToIOSConnector.sendDataToIOS(structData: sensorData)
         }
     }
     
+    //This method creates the struct of type SensorData so that the CSV file can be created
+    func addSensorData(){
+        let timestamp = Date().timeIntervalSince1970
+        let newData = SensorData(timestamp: timestamp, accelX: accelerationValueX ?? "", accelY: accelerationValueY ?? "", accelZ: accelerationValueZ ?? "", gyroX: gyroscopeValueX ?? "",
+                                 gyroY: gyroscopeValueY ?? "", gyroZ: gyroscopeValueZ ?? "", magX: magnetometerValueX ?? "", magY: magnetometerValueY ?? "", magZ: magnetometerValueZ ?? "")
+            
+        sensorData.append(newData)
+        print("Sensor Data was added on the watch")
+        print(newData)
+    }
     
+    //This function sends the data to IOS application
+    func stopCollectingSensorData() {
+        
+        // Stop updating sensor data
+        motionManager.stopDeviceMotionUpdates()
+        isRecording = false
+        
+        //Clean publisher variables
+        accelerationValueX = nil
+        accelerationValueY = nil
+        accelerationValueZ = nil
+
+        gyroscopeValueX = nil
+        gyroscopeValueY = nil
+        gyroscopeValueZ = nil
+
+        magnetometerValueX = nil
+        magnetometerValueY = nil
+        magnetometerValueZ = nil
+        
+        //Send the sensor data to IOS application
+        watchToIOSConnector.sendDataToIOS(structData: sensorData)
+        
+        //Stop the extended runtime
+        session?.invalidate()
+        session = nil
+        
+    }
+    
+  
+    //Functions necessary to implement extendedRuntimeSession
+    //Functions taken from https://developer.apple.com/documentation/watchkit/using_extended_runtime_sessions
     func extendedRuntimeSessionDidStart(_ extendedRuntimeSession: WKExtendedRuntimeSession) {
             print("Extended runtime session started successfully.")
-            isExtended = true
         }
 
     func extendedRuntimeSessionWillExpire(_ extendedRuntimeSession: WKExtendedRuntimeSession) {
             print("Extended runtime session will expire soon. Saving data and cleaning up.")
             stopCollectingSensorData()
-            // I will ad UI to alert the user that the session is ending
+            // I will add UI to alert the user that the session is ending
         }
 
     func extendedRuntimeSession(_ extendedRuntimeSession: WKExtendedRuntimeSession, didInvalidateWith reason: WKExtendedRuntimeSessionInvalidationReason, error: Error?) {
