@@ -47,15 +47,25 @@ class WatchConnector: NSObject, WCSessionDelegate, ObservableObject{
             // Read the data from the received file URL
             let data = try Data(contentsOf: file.fileURL)
             
+            // Debug the raw JSON data
+            if let jsonString = String(data: data, encoding: .utf8) {
+                print("Raw JSON string: \(jsonString)")
+            }else{
+                print("Problem")
+            }
+            
             // Attempt to decode the data as an array of SensorData
             let receivedData = try JSONDecoder().decode([SensorData].self, from: data)
-            print("Received sensor data array: \(receivedData)")
             
             // Pass the decoded sensor data array to your ActivitiesViewModel
             DispatchQueue.main.async {
-                // Assuming your ActivitiesViewModel has a method to handle received sensor data
-                self.activityViewModel?.sensorData.append(contentsOf: receivedData)
-                self.activityViewModel?.addSensorData()
+                // Method to handle received sensor data
+                print("Sensor Data was added")
+                for data in receivedData{
+                    self.activityViewModel!.addSensorData(accelX: data.accelX, accelY: data.accelY, accelZ: data.accelZ, gyroX: data.gyroX, gyroY: data.gyroY, gyroZ: data.gyroZ, magX: data.magX,
+                                                      magY: data.magY, magZ: data.magZ)
+                }
+                self.activityViewModel?.exportReady = true
             }
             
         } catch {

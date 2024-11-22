@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct WatchView: View {
+    @Environment(\.modelContext) var context
     
     //WatchView initializes the ViewModel
     @StateObject var viewModel = ViewModel()
@@ -25,41 +26,39 @@ struct WatchView: View {
             
             VStack(alignment: .leading, spacing:8 ){
                 HeartRateView()
-                Text("Accelerometer")
-                    .font(.headline)
-            
+                
                 Text("User Acceleration")
                     .font(.headline)
-                Text(viewModel.accelerationValueX ?? "No Data")
+                Text(viewModel.sensorData[0].accelX)
                     .font(.subheadline)
                     .padding(.bottom)
-                Text(viewModel.accelerationValueY ?? "No Data")
+                Text(viewModel.sensorData[0].accelY)
                     .font(.subheadline)
                     .padding(.bottom)
-                Text(viewModel.accelerationValueZ ?? "No Data")
+                Text(viewModel.sensorData[0].accelZ)
                     .font(.subheadline)
                     .padding(.bottom)
                 Text("Gyroscope Values")
                     .font(.headline)
-                Text(viewModel.gyroscopeValueX ?? "No Data")
+                Text(viewModel.sensorData[0].gyroX)
                     .font(.subheadline)
                     .padding(.bottom)
-                Text(viewModel.gyroscopeValueY ?? "No Data")
+                Text(viewModel.sensorData[0].gyroY)
                     .font(.subheadline)
                     .padding(.bottom)
-                Text(viewModel.gyroscopeValueZ ?? "No Data")
+                Text(viewModel.sensorData[0].gyroZ)
                     .font(.subheadline)
                     .padding(.bottom)
 
                 Text("Magnetic Vector")
                     .font(.headline)
-                Text(viewModel.magnetometerValueX ?? "No Data")
+                Text(viewModel.sensorData[0].magX)
                     .font(.subheadline)
                     .padding(.bottom)
-                Text(viewModel.magnetometerValueY ?? "No Data")
+                Text(viewModel.sensorData[0].magY)
                     .font(.subheadline)
                     .padding(.bottom)
-                Text(viewModel.magnetometerValueZ ?? "No Data")
+                Text(viewModel.sensorData[0].magZ)
                     .font(.subheadline)
                     .padding(.bottom)
                 
@@ -90,9 +89,11 @@ struct WatchView: View {
                 .backgroundStyle(.red)
             }
         }
-        
         .padding()
         .ignoresSafeArea(.container, edges: .bottom)
+        .onAppear {
+                    viewModel.setContext(context)
+                }
 
     }
     

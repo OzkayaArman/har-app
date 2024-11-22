@@ -1,6 +1,8 @@
 import Foundation
+import _SwiftData_SwiftUI
 import SwiftUICore
 import WatchConnectivity
+import SwiftData
 
 /*
  The code contained in this file was written by following a youtube tutorial
@@ -8,6 +10,10 @@ import WatchConnectivity
  GAP: https://www.youtube.com/watch?v=QzwHU0Xu_EY&t=949s
 */
 class WatchToIOSConnector: NSObject, WCSessionDelegate, ObservableObject {
+   
+    
+    private var context: ModelContext?
+    
     
     //The object that initiates communication between a Watch app and its companion iOS app.
     var session: WCSession
@@ -22,28 +28,70 @@ class WatchToIOSConnector: NSObject, WCSessionDelegate, ObservableObject {
         session.activate()
     }
     
+    func setContext(_ context: ModelContext) {
+            self.context = context
+        }
+    
     func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: (any Error)?) {
         
     }
     
-    //This function sends a messsage From watch to Iphone
-    func sendDataToIOS(structData: [SensorData]){
-        print(structData.description)
-        let tempDirectory = FileManager.default.temporaryDirectory
-        let fileURL = tempDirectory.appendingPathComponent("SensorData-\(Date().timeIntervalSince1970).json")
-        
+    func sendDataToIOS() {
+        // Ensure the context is available
+        guard let context = context else {
+            print("Context is not set. Unable to fetch data.")
+            return
+        }
+
         do {
-            // Encode data and write to file
-            let jsonData = try JSONEncoder().encode(structData)
-            try jsonData.write(to: fileURL)
-                
+            // Fetch all `ModelSensorData` records using a FetchDescriptor
+            let fetchDescriptor = FetchDescriptor<ModelSensorData>(
+                sortBy: [SortDescriptor(\.timestamp, order: .reverse)] // Sort by timestamp in descending order
+            )
+            let sensorDataArray = try context.fetch(fetchDescriptor)
+            
+            
+            if sensorDataArray.isEmpty {
+                print("No data found in the database to send.")
+                return
+            }
+            
+            for data in sensorDataArray{
+                print("Acceleration")
+                print(data.accelX)
+            }
+
+            // Convert the fetched data into JSON
+            let encoder = JSONEncoder()
+            encoder.outputFormatting = .prettyPrinted
+            
+            do {
+                let jsonData = try encoder.encode(sensorDataArray)
+                if let jsonString = String(data: jsonData, encoding: .utf8) {
+                    print("Encoded JSON data: \(jsonString)")
+                }
+            } catch let EncodingError.invalidValue(value, context) {
+                print("Invalid value '\(value)' for encoding: \(context.debugDescription)")
+            } catch {
+                print("Unexpected encoding error: \(error.localizedDescription)")
+            }
+            
+            let jsonData = try encoder.encode(sensorDataArray)
+
+            // Save the JSON data to a temporary file for transfer
+            let tempFileURL = FileManager.default.temporaryDirectory.appendingPathComponent("SensorData.json")
+            try jsonData.write(to: tempFileURL)
+
             // Transfer the file to the iPhone
-            session.transferFile(fileURL, metadata: ["fileType": "sensorData"])
-            print("File transfer initiated for \(fileURL)")
+            session.transferFile(tempFileURL, metadata: nil)
+            print("Data sent to iPhone via file transfer: \(tempFileURL)")
         } catch {
-                print("Failed to write sensor data to file with error: \(error.localizedDescription)")
+            print("Error fetching or encoding sensor data: \(error.localizedDescription)")
         }
     }
+
+
+
     
     //Receiving Messsage From Iphone
     func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {

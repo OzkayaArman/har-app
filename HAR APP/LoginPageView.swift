@@ -5,9 +5,12 @@
 //  Created by Arman Ozkaya on 11/11/2024.
 //
 
+
+
 import SwiftUI
 import AuthenticationServices
 import Foundation
+
 
 
 struct LoginPageView: View {
@@ -17,7 +20,29 @@ struct LoginPageView: View {
     
     var body: some View {
             VStack{
-                Text("Sign In")
+
+ 
+                
+                Form{
+                    Section(header: Text("Personal Info")){
+                        TextField("First Name", text: $login.firstname)
+                        TextField("Last Name", text: $login.lastname)
+                        TextField("Email", text: $login.email)
+                            .keyboardType(.emailAddress)
+                            .autocapitalization(.none)
+                            .disableAutocorrection(true)
+                        DatePicker("Birthday", selection: $login.birthdate,
+                                   displayedComponents: .date)
+                        
+                        Button{
+                            
+                        } label: {
+                            Text("Save Changes")
+                        }
+                        
+                    }
+                    
+                }
                 SignInWithAppleButton(
                     .signIn,
                     onRequest: configure,
@@ -73,4 +98,8 @@ struct LoginPage_Previews: PreviewProvider {
         LoginPageView(login: loginModel())
             .preferredColorScheme(.dark)
     }
+    
 }
+
+
+

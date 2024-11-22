@@ -9,31 +9,7 @@ import Foundation
 import CoreMotion
 import SwiftUI
 import WatchKit
-
-//This structure will be filled in by the sensor data obtained from coremotion
-struct SensorData: Codable{
-    var timestamp: Double
-    var accelX: String
-    var accelY: String
-    var accelZ: String
-    var gyroX: String
-    var gyroY: String
-    var gyroZ: String
-    var magX: String
-    var magY: String
-    var magZ: String
-    
-    // Computed Variable tod describe the sensor data
-    var description: String {
-            return """
-            SensorData:
-            Timestamp: \(timestamp)
-            Accelerometer - X: \(accelX), Y: \(accelY), Z: \(accelZ)
-            Gyroscope - X: \(gyroX), Y: \(gyroY), Z: \(gyroZ)
-            Magnetometer - X: \(magX), Y: \(magY), Z: \(magZ)
-            """
-        }
-}
+import SwiftData
 
 /*
  GAP: https://medium.com/appledeveloperacademy-ufpe/swift-how-to-use-coremotion-to-obtain-sensorial-data-20b1b73a948a
@@ -43,21 +19,26 @@ struct SensorData: Codable{
 */
 
 class ViewModel: NSObject, ObservableObject, WKExtendedRuntimeSessionDelegate{
-    //Published variables enable the WatchView to read and display sensor data
-    @Published var accelerationValueX: String?
-    @Published var accelerationValueY: String?
-    @Published var accelerationValueZ: String?
-    @Published var gyroscopeValueX: String?
-    @Published var gyroscopeValueY: String?
-    @Published var gyroscopeValueZ: String?
-    @Published var magnetometerValueX: String?
-    @Published var magnetometerValueY: String?
-    @Published var magnetometerValueZ: String?
-    
+
+    private var context: ModelContext?
     @Published var isRecording = false
     
     //Holds sensor data
-    @Published var sensorData: [SensorData] = []
+    @Published var sensorData: [ModelSensorData] = [
+        ModelSensorData(
+            timestamp: Date().timeIntervalSince1970,
+            accelX: "0.0",
+            accelY: "0.0",
+            accelZ: "0.0",
+            gyroX: "0.0",
+            gyroY: "0.0",
+            gyroZ: "0.0",
+            magX: "0.0",
+            magY: "0.0",
+            magZ: "0.0"
+        )
+    ]
+    
     
     
     //ViewModel class properties, marked with private for security best practices
@@ -73,7 +54,7 @@ class ViewModel: NSObject, ObservableObject, WKExtendedRuntimeSessionDelegate{
 
     //Constructor for the ViewModel which also initializes an instance of the watchToIOSConnector
     override init() {
-                
+            
             //Initialize watchToIOSConnector property, this property is an instance of WatchToIOSConnector class
             self.watchToIOSConnector = WatchToIOSConnector()
             super.init()
@@ -129,43 +110,44 @@ class ViewModel: NSObject, ObservableObject, WKExtendedRuntimeSessionDelegate{
     } //End of startCollectingSensorData function
     
     
+    func setContext(_ context: ModelContext) {
+            self.context = context
+            self.watchToIOSConnector.setContext(context)
+        }
+    
+    //This method creates the struct of type SensorData so that the CSV file can be created
     private func getMotion(motion: CMDeviceMotion?){
+        
+        guard let context = context else {
+                    print("Context is not set!")
+                    return
+                }
+        
         //Unwrap the optional
         if let motion = motion {
             
-            // Get user acceleration, gyroscope, and magnetometer data
+            //Create the timestamp
+            let timestamp = Date().timeIntervalSince1970
+            
+            let id = UUID()
+            
+            // Get user acceleration, gyroscope, and magnetometer data from sensors using coremoiton
             self.userAcceleration = motion.userAcceleration
             self.watchAttitude = motion.attitude
             self.magneticVector = motion.magneticField
             
-            // Update publishers with the new sensor data
-            self.accelerationValueX = String(format: "%.5f", userAcceleration.x)
-            self.accelerationValueY = String(format: "%.5f", userAcceleration.y)
-            self.accelerationValueZ = String(format: "%.5f", userAcceleration.z)
-            
-            self.gyroscopeValueX = String(format: "%.5f",  watchAttitude.pitch)
-            self.gyroscopeValueY = String(format: "%.5f",  watchAttitude.yaw)
-            self.gyroscopeValueZ = String(format: "%.5f",  watchAttitude.roll)
-            
-            self.magnetometerValueX = String(format: "%.5f", magneticVector.field.x)
-            self.magnetometerValueY = String(format: "%.5f", magneticVector.field.y)
-            self.magnetometerValueZ = String(format: "%.5f", magneticVector.field.z)
-            
-            //Update the array that stores each snapshot of sensor data: 3Ohz == 30 array elements per second
-            addSensorData()
+            let newData = ModelSensorData( timestamp: timestamp, accelX: String(format: "%.5f", userAcceleration.x), accelY: String(format: "%.5f", userAcceleration.y),
+                                          accelZ: String(format: "%.5f", userAcceleration.z), gyroX: String(format: "%.5f",  watchAttitude.pitch), gyroY: String(format: "%.5f",  watchAttitude.yaw),
+                                          gyroZ: String(format: "%.5f",  watchAttitude.roll), magX: String(format: "%.5f", magneticVector.field.x), magY: String(format: "%.5f", magneticVector.field.y),
+                                          magZ: String(format: "%.5f", magneticVector.field.z)
+            )
+                
+            sensorData = [newData]
+            context.insert(newData)
+            //print(newData)
         }
     }
     
-    //This method creates the struct of type SensorData so that the CSV file can be created
-    func addSensorData(){
-        let timestamp = Date().timeIntervalSince1970
-        let newData = SensorData(timestamp: timestamp, accelX: accelerationValueX ?? "", accelY: accelerationValueY ?? "", accelZ: accelerationValueZ ?? "", gyroX: gyroscopeValueX ?? "",
-                                 gyroY: gyroscopeValueY ?? "", gyroZ: gyroscopeValueZ ?? "", magX: magnetometerValueX ?? "", magY: magnetometerValueY ?? "", magZ: magnetometerValueZ ?? "")
-            
-        sensorData.append(newData)
-        print("Sensor Data was added on the watch")
-        print(newData)
-    }
     
     //This function sends the data to IOS application
     func stopCollectingSensorData() {
@@ -174,21 +156,10 @@ class ViewModel: NSObject, ObservableObject, WKExtendedRuntimeSessionDelegate{
         motionManager.stopDeviceMotionUpdates()
         isRecording = false
         
-        //Clean publisher variables
-        accelerationValueX = nil
-        accelerationValueY = nil
-        accelerationValueZ = nil
-
-        gyroscopeValueX = nil
-        gyroscopeValueY = nil
-        gyroscopeValueZ = nil
-
-        magnetometerValueX = nil
-        magnetometerValueY = nil
-        magnetometerValueZ = nil
-        
         //Send the sensor data to IOS application
-        watchToIOSConnector.sendDataToIOS(structData: sensorData)
+        //@Query(sort: \ModelSensorData.timestamp) var sensorData: ModelSensorData
+
+        watchToIOSConnector.sendDataToIOS()
         
         //Stop the extended runtime
         session?.invalidate()

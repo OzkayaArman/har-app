@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		CB0180FD2CBEB8B3000FBA3C /* SwiftCSVEncoder in Frameworks */ = {isa = PBXBuildFile; productRef = CB0180FC2CBEB8B3000FBA3C /* SwiftCSVEncoder */; };
+		CB6BE1D32CF0D55100396F6D /* SwiftCSVEncoder in Frameworks */ = {isa = PBXBuildFile; productRef = CB6BE1D22CF0D55100396F6D /* SwiftCSVEncoder */; };
 		CBD786B12CD6CED10034A24C /* WatchHARApp Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = CBD7868E2CD6CECE0034A24C /* WatchHARApp Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		CBD786C02CD6CF350034A24C /* WatchConnectivity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CBD786BF2CD6CF350034A24C /* WatchConnectivity.framework */; };
 /* End PBXBuildFile section */
@@ -120,7 +120,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CB0180FD2CBEB8B3000FBA3C /* SwiftCSVEncoder in Frameworks */,
+				CB6BE1D32CF0D55100396F6D /* SwiftCSVEncoder in Frameworks */,
 				CBD786C02CD6CF350034A24C /* WatchConnectivity.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -230,7 +230,7 @@
 			);
 			name = "HAR APP";
 			packageProductDependencies = (
-				CB0180FC2CBEB8B3000FBA3C /* SwiftCSVEncoder */,
+				CB6BE1D22CF0D55100396F6D /* SwiftCSVEncoder */,
 			);
 			productName = "HAR APP";
 			productReference = CB05392E2CACA01E00864980 /* HAR APP.app */;
@@ -394,7 +394,7 @@
 			mainGroup = CB0539252CACA01E00864980;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				CB0180FB2CBEB8B3000FBA3C /* XCRemoteSwiftPackageReference "SwiftCSVEncoder" */,
+				CB6BE1D12CF0D55100396F6D /* XCRemoteSwiftPackageReference "SwiftCSVEncoder" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = CB05392F2CACA01E00864980 /* Products */;
@@ -643,6 +643,7 @@
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
@@ -988,7 +989,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		CB0180FB2CBEB8B3000FBA3C /* XCRemoteSwiftPackageReference "SwiftCSVEncoder" */ = {
+		CB6BE1D12CF0D55100396F6D /* XCRemoteSwiftPackageReference "SwiftCSVEncoder" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/scottmatthewman/SwiftCSVEncoder";
 			requirement = {
@@ -999,9 +1000,9 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		CB0180FC2CBEB8B3000FBA3C /* SwiftCSVEncoder */ = {
+		CB6BE1D22CF0D55100396F6D /* SwiftCSVEncoder */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = CB0180FB2CBEB8B3000FBA3C /* XCRemoteSwiftPackageReference "SwiftCSVEncoder" */;
+			package = CB6BE1D12CF0D55100396F6D /* XCRemoteSwiftPackageReference "SwiftCSVEncoder" */;
 			productName = SwiftCSVEncoder;
 		};
 /* End XCSwiftPackageProductDependency section */

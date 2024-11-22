@@ -6,12 +6,15 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct WatchHARApp_Watch_AppApp: App {
+    
     var body: some Scene {
         WindowGroup {
             WatchView()
         }
+        .modelContainer(for: ModelSensorData.self)
     }
 }

@@ -17,7 +17,6 @@ struct ActivityDetailView: View {
     @State private var startActivity = false
     @State private var showingExporter = false
     @State private var csvFile: CSVFile?
-    @State private var exportReady = false
     @State private var showAlert = false
     @State private var showAlertConnectivity = false
     @State private var successfulDataCollection = false
@@ -44,6 +43,7 @@ struct ActivityDetailView: View {
             Divider()
             Spacer()
             if(!startActivity){
+                //Start Activity Button
                 Button {
                     let status = viewModel.watchConnector.sendCommandToWatch(data: "Start")
                     if(status){
@@ -66,11 +66,11 @@ struct ActivityDetailView: View {
                             )
                         }
             }else{
+                //Stop Activity Button
                 Button {
                     let status = viewModel.watchConnector.sendCommandToWatch(data: "Stop")
                     if(status){
                         startActivity = false
-                        exportReady = true
                         successfulDataCollection = true
                         //Call clean sensor data function
                         viewModel.cleanSensorData()
@@ -85,7 +85,7 @@ struct ActivityDetailView: View {
                 
             }
             
-            if(exportReady){
+            if(viewModel.exportReady){
                 Button(){
                     csvFile = CSVFile(data: viewModel.sensorData, activityName: activity.name, userName: viewModel.firstName ?? "noUser" )
                     showingExporter = true
@@ -104,12 +104,12 @@ struct ActivityDetailView: View {
                     switch result {
                     case .success(let url):
                         print("CSV file saved successfully at: \(url)")
-                        exportReady = false
+                        viewModel.exportReady = false
                         showingExporter = false
                         showAlert = true;
                     case .failure(let error):
                         print("Error saving CSV file: \(error.localizedDescription)")
-                        exportReady = false
+                        viewModel.exportReady = false
                         showingExporter = false
                     }
                 }
