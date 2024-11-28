@@ -48,11 +48,11 @@ class WatchConnector: NSObject, WCSessionDelegate, ObservableObject{
             let data = try Data(contentsOf: file.fileURL)
             
             // Debug the raw JSON data
-            if let jsonString = String(data: data, encoding: .utf8) {
-                print("Raw JSON string: \(jsonString)")
-            }else{
-                print("Problem")
-            }
+//            if let jsonString = String(data: data, encoding: .utf8) {
+//                print("Raw JSON string: \(jsonString)")
+//            }else{
+//                print("Problem")
+//            }
             
             // Attempt to decode the data as an array of SensorData
             let receivedData = try JSONDecoder().decode([SensorData].self, from: data)

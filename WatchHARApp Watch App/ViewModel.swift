@@ -77,7 +77,7 @@ class ViewModel: NSObject, ObservableObject, WKExtendedRuntimeSessionDelegate{
      */
     func startCollectingSensorData(){
         isRecording = true
-        
+        _ = Timer.scheduledTimer(timeInterval: 180, target: self, selector: #selector(timerFired), userInfo: nil, repeats: false)
         //Configure extended runtime session
         session = WKExtendedRuntimeSession()
         session?.delegate = self
@@ -88,7 +88,7 @@ class ViewModel: NSObject, ObservableObject, WKExtendedRuntimeSessionDelegate{
         
         //Variable that indicate the frame of reference for attitude-related motion data
         //!! MAY NEED TO CHANGE
-        let referenceFrame = CMAttitudeReferenceFrame.xMagneticNorthZVertical
+        let referenceFrame = CMAttitudeReferenceFrame.xTrueNorthZVertical
         
         //Check whether the reference frame is contained in the device and whether device motion is available
         if (CMMotionManager.availableAttitudeReferenceFrames().contains(referenceFrame) && motionManager.isDeviceMotionAvailable) {
@@ -115,8 +115,14 @@ class ViewModel: NSObject, ObservableObject, WKExtendedRuntimeSessionDelegate{
             self.watchToIOSConnector.setContext(context)
         }
     
+    @objc func timerFired(){
+        stopCollectingSensorData()
+        print("Stopping sensor data collection with timer")
+    }
+    
     //This method creates the struct of type SensorData so that the CSV file can be created
     private func getMotion(motion: CMDeviceMotion?){
+        
         
         guard let context = context else {
                     print("Context is not set!")
@@ -128,9 +134,7 @@ class ViewModel: NSObject, ObservableObject, WKExtendedRuntimeSessionDelegate{
             
             //Create the timestamp
             let timestamp = Date().timeIntervalSince1970
-            
-            let id = UUID()
-            
+                        
             // Get user acceleration, gyroscope, and magnetometer data from sensors using coremoiton
             self.userAcceleration = motion.userAcceleration
             self.watchAttitude = motion.attitude
@@ -157,16 +161,55 @@ class ViewModel: NSObject, ObservableObject, WKExtendedRuntimeSessionDelegate{
         isRecording = false
         
         //Send the sensor data to IOS application
-        //@Query(sort: \ModelSensorData.timestamp) var sensorData: ModelSensorData
-
         watchToIOSConnector.sendDataToIOS()
         
         //Stop the extended runtime
         session?.invalidate()
         session = nil
         
+        //Reset the sensor data publisher for watch view
+        sensorData = [
+            ModelSensorData(
+                timestamp: Date().timeIntervalSince1970,
+                accelX: "0.0",
+                accelY: "0.0",
+                accelZ: "0.0",
+                gyroX: "0.0",
+                gyroY: "0.0",
+                gyroZ: "0.0",
+                magX: "0.0",
+                magY: "0.0",
+                magZ: "0.0"
+            )
+        ]
+        
+        //Reset the swift data context to prevent data spillage when a new activity recording session is started
+        
+        // Ensure the context is available
+        guard let context = context else {
+            print("Context is not set. Unable to fetch data.")
+            return
+        }
+        do {
+            // Fetch all `ModelSensorData` records using a FetchDescriptor
+            let fetchDescriptor = FetchDescriptor<ModelSensorData>()
+            let sensorDataArray = try context.fetch(fetchDescriptor)
+            
+            if sensorDataArray.isEmpty {
+                print("No data found in the database to delete.")
+                return
+            }
+            
+            // Delete each fetched object
+            for sensorData in sensorDataArray {
+                context.delete(sensorData)
+            }
+            print("Deleted all sensor data")
+            
+        }catch {
+            print("Error deleting data: \(error.localizedDescription)")
+        }
     }
-    
   
     //Functions necessary to implement extendedRuntimeSession
     //Functions taken from https://developer.apple.com/documentation/watchkit/using_extended_runtime_sessions

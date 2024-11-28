@@ -19,44 +19,92 @@ struct LoginPageView: View {
     @ObservedObject var login: loginModel
     
     var body: some View {
-            VStack{
-
- 
+    
+        VStack(){
+            
+            Image("Login")
+                .resizable()
+                .scaledToFill()
+                .frame(width:430, height:350)
+                .ignoresSafeArea()
+            
+            Text("Sign In")
+                .font(.title)
+                .foregroundStyle(.black)
+                .fontWeight(.bold)
+                .scaledToFit()
+                .minimumScaleFactor(0.60)
+                .frame(width: 350, height: 35, alignment: .leading)
+                .padding(.horizontal)
                 
-                Form{
-                    Section(header: Text("Personal Info")){
-                        TextField("First Name", text: $login.firstname)
+            Spacer()
+            ScrollView{
+    
+                    Section(){
+                        TextField("First Name *", text: $login.firstname)
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
+                            .padding(10)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 8) // Adds border
+                                .stroke(Color.blue, lineWidth: 2)
+                            )
+                        
                         TextField("Last Name", text: $login.lastname)
-                        TextField("Email", text: $login.email)
-                            .keyboardType(.emailAddress)
-                            .autocapitalization(.none)
-                            .disableAutocorrection(true)
+                            .font(.subheadline)
+                            .fontWeight(.bold)
+                            .padding(10)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 8) // Adds border
+                                .stroke(Color.blue, lineWidth: 2)
+                            )
                         DatePicker("Birthday", selection: $login.birthdate,
                                    displayedComponents: .date)
-                        
-                        Button{
-                            
-                        } label: {
-                            Text("Save Changes")
-                        }
-                        
+                            .padding(10)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 8) // Adds border
+                                .stroke(Color.blue, lineWidth: 2)
+                            )
                     }
                     
+                    .padding(15)
+                
+                    Button{
+                        login.authenticated = true
+                        login.loadUserData()
+                    } label: {
+                        Label("Login", systemImage: "person.fill.checkmark")
+                            .frame(width: 350, height: 5 , alignment: .center)
+                            .padding(.vertical)
+                            
+                    }
+                        .buttonStyle(.borderedProminent)
+                        .tint(.blue)
+                        .cornerRadius(10)
+                    
+                    Text("OR")
+                        .font(.subheadline)
+                        .fontWeight(.bold)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .padding()
+                    
+                    SignInWithAppleButton(
+                        .signIn,
+                        onRequest: configure,
+                        onCompletion: handle
+                    )
+                    .signInWithAppleButtonStyle(.black)
+                    .frame(height: 50)
+                    .padding()
                 }
-                SignInWithAppleButton(
-                    .signIn,
-                    onRequest: configure,
-                    onCompletion: handle
-                )
-                .signInWithAppleButtonStyle(
-                    colorScheme == .dark ? .white : .black
-                )
-                .frame(height: 50)
-                .padding()
-            }
-        
+        }
+                
     }
-
+    
+    /*
+    //https://www.youtube.com/watch?v=O2FVDzoAB34&t=654s
+     GAP: The following code and part of loaduser data function inn login model that enables login through apple id was developed by following the tutorial above
+    */
     func configure(_ request: ASAuthorizationAppleIDRequest) {
         request.requestedScopes = [.fullName, .email]
     }
@@ -73,6 +121,7 @@ struct LoginPageView: View {
                     UserDefaults.standard.setValue(appleUserData, forKey: "appleUser")
                     print("saved apple user", appleUser)
                     login.authenticated = true
+                    login.loadUserData()
                 } else {
                     //For returning users obtain details from UserDefaults
                     print("missing some fields or returning user",
@@ -82,6 +131,7 @@ struct LoginPageView: View {
                         let appleUser = try? JSONDecoder().decode(AppleUser.self, from: appleUserData) else { return }
                     print(appleUser)
                     login.authenticated = true
+                    login.loadUserData()
                 }
             default:
                 print(auth.credential)

@@ -29,9 +29,6 @@ struct SensorData: Codable, Identifiable {
 
 final class ActivitiesViewModel: ObservableObject {
 
-    @Published var firstName: String?
-    @Published var lastName: String?
-    @Published var email: String?
     @Published var exportReady = false
     
     
@@ -49,12 +46,10 @@ final class ActivitiesViewModel: ObservableObject {
     init() {
         self.watchConnector = WatchConnector()
         self.watchConnector.activityViewModel = self // Pass activityViewModel reference
-        loadUserData()
     }
 
     //This method creates the struct of type SensorData so that the CSV file can be created
     func addSensorData(accelX: String, accelY: String, accelZ: String, gyroX:String, gyroY: String, gyroZ: String, magX: String, magY: String, magZ: String) {
-        print("Sensor Data was added")
         let timestamp = Date().timeIntervalSince1970
         let id = UUID()
         let newData = SensorData(id: id, timestamp: timestamp, accelX: accelX, accelY: accelY, accelZ: accelZ, gyroX: gyroX,
@@ -71,14 +66,6 @@ final class ActivitiesViewModel: ObservableObject {
     }
     
     
-    func loadUserData() {
-        guard let appleUserData = UserDefaults.standard.data(forKey: "appleUser"),
-            let appleUser = try? JSONDecoder().decode(AppleUser.self, from: appleUserData) else { return }
-        firstName = appleUser.firstName
-        lastName = appleUser.lastName
-        email = appleUser.email
-
-    }
     
 }
 

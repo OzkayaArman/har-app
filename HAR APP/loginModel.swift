@@ -21,4 +21,14 @@ class loginModel: ObservableObject{
         self.email = ""
         self.birthdate = Date.now
     }
+    
+    func loadUserData() {
+        if(firstname == ""){
+            guard let appleUserData = UserDefaults.standard.data(forKey: "appleUser"),
+                let appleUser = try? JSONDecoder().decode(AppleUser.self, from: appleUserData) else { return }
+            firstname = appleUser.firstName
+            lastname = appleUser.lastName
+            email = appleUser.email
+        }
+    }
 }

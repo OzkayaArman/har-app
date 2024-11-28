@@ -9,11 +9,11 @@ struct Activities: Hashable, Identifiable{
 
 }
 
-struct MockData {
+class ActivityMetaData: ObservableObject {
+    //Sample activity is defined for preview / debug purposes only
+    var sampleActivity = Activities(name: "Indoor Running", imageName: "figure.run.treadmill.circle.fill")
     
-    static let sampleActivity = Activities(name: "Indoor Running",
-                                           imageName: "figure.run.treadmill.circle.fill")
-    static let activityArray = [
+    @Published var activityArray: [Activities] = [
         Activities(name: "Indoor Running",
                   imageName: "figure.run.treadmill.circle.fill"),
         
@@ -47,25 +47,6 @@ struct MockData {
 }
 
 
-struct ActivityIconView: View {
-    let activity: Activities
-    
-    var body: some View {
-        VStack {
-            Image(systemName: activity.imageName)
-                .resizable()
-                .frame(width: 90, height: 90)
-            Text(activity.name)
-                .font(.subheadline)
-                .fontWeight(.semibold)
-                .foregroundColor(Color(.label))
-                .scaledToFit()
-                .minimumScaleFactor(0.5)
-            }
-            .padding()
-            
-    }
-}
 
 
 

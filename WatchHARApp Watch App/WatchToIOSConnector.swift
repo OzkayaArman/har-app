@@ -56,25 +56,25 @@ class WatchToIOSConnector: NSObject, WCSessionDelegate, ObservableObject {
                 return
             }
             
-            for data in sensorDataArray{
-                print("Acceleration")
-                print(data.accelX)
-            }
+//            for data in sensorDataArray{
+//                print("Acceleration")
+//                print(data.accelX)
+//            }
 
             // Convert the fetched data into JSON
             let encoder = JSONEncoder()
             encoder.outputFormatting = .prettyPrinted
             
-            do {
-                let jsonData = try encoder.encode(sensorDataArray)
-                if let jsonString = String(data: jsonData, encoding: .utf8) {
-                    print("Encoded JSON data: \(jsonString)")
-                }
-            } catch let EncodingError.invalidValue(value, context) {
-                print("Invalid value '\(value)' for encoding: \(context.debugDescription)")
-            } catch {
-                print("Unexpected encoding error: \(error.localizedDescription)")
-            }
+//            do {
+//                let jsonData = try encoder.encode(sensorDataArray)
+//                if let jsonString = String(data: jsonData, encoding: .utf8) {
+//                    print("Encoded JSON data: \(jsonString)")
+//                }
+//            } catch let EncodingError.invalidValue(value, context) {
+//                print("Invalid value '\(value)' for encoding: \(context.debugDescription)")
+//            } catch {
+//                print("Unexpected encoding error: \(error.localizedDescription)")
+//            }
             
             let jsonData = try encoder.encode(sensorDataArray)
 

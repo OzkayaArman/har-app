@@ -19,7 +19,7 @@ struct AccountView: View {
     @State private var heartRateSensor = false;
     @State private var music = false;
     
-    @ObservedObject var viewModel: ActivitiesViewModel
+    @ObservedObject var loginModel: loginModel
     
     var body: some View {
         NavigationStack {
@@ -57,10 +57,8 @@ struct AccountView: View {
     }
     
     func loadUserData() {
-        firstName = viewModel.firstName ?? ""
-        lastName = viewModel.lastName ?? ""
-        email = viewModel.email ?? ""
-
+        firstName = loginModel.firstname
+        lastName = loginModel.lastname
     }
 
 }
@@ -68,5 +66,5 @@ struct AccountView: View {
 
 
 #Preview {
-    AccountView(viewModel: ActivitiesViewModel())
+    AccountView(loginModel: loginModel())
 }
