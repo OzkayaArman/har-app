@@ -24,6 +24,7 @@ struct SensorData: Codable, Identifiable {
     var magX: String
     var magY: String
     var magZ: String
+    var heartbeat: String
 }
 
 
@@ -49,11 +50,11 @@ final class ActivitiesViewModel: ObservableObject {
     }
 
     //This method creates the struct of type SensorData so that the CSV file can be created
-    func addSensorData(accelX: String, accelY: String, accelZ: String, gyroX:String, gyroY: String, gyroZ: String, magX: String, magY: String, magZ: String) {
+    func addSensorData(accelX: String, accelY: String, accelZ: String, gyroX:String, gyroY: String, gyroZ: String, magX: String, magY: String, magZ: String, heartbeat: String) {
         let timestamp = Date().timeIntervalSince1970
         let id = UUID()
         let newData = SensorData(id: id, timestamp: timestamp, accelX: accelX, accelY: accelY, accelZ: accelZ, gyroX: gyroX,
-                                 gyroY: gyroY, gyroZ: gyroZ, magX: magX, magY: magY, magZ: magZ)
+                                 gyroY: gyroY, gyroZ: gyroZ, magX: magX, magY: magY, magZ: magZ, heartbeat: heartbeat)
             
         sensorData.append(newData)
     }
@@ -120,7 +121,8 @@ struct CSVFile: FileDocument {
                     CSVColumn("GyroZ", \.gyroZ),
                     CSVColumn("MagX", \.magX),
                     CSVColumn("MagY", \.magY),
-                    CSVColumn("MagZ", \.magZ)
+                    CSVColumn("MagZ", \.magZ),
+                    CSVColumn("HeartRate", \.heartbeat)
                 ],
                 configuration: CSVEncoderConfiguration(dateEncodingStrategy: .iso8601)
 

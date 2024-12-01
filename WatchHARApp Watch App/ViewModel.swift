@@ -10,18 +10,28 @@ import CoreMotion
 import SwiftUI
 import WatchKit
 import SwiftData
+import HealthKit
 
 /*
  GAP: https://medium.com/appledeveloperacademy-ufpe/swift-how-to-use-coremotion-to-obtain-sensorial-data-20b1b73a948a
  GAP: https://developer.apple.com/documentation/coremotion/getting_processed_device-motion_data
  I have implemented startCollectingSensorData function, getMotion function, and publisher/private variables
- by following the example in the URL above and the developer documentation.
+ by following the example in the URL above and the developer documentations.
 */
 
 class ViewModel: NSObject, ObservableObject, WKExtendedRuntimeSessionDelegate{
-
+    
+    //context specifies where the app can commit data on device using Swift Data
     private var context: ModelContext?
+    private var healthStore = HKHealthStore()
+    let heartRateQuantity = HKUnit(from: "count/min")
+    var heartRateQuery: HKAnchoredObjectQuery?
+    
+    //Publisher variable for watch viw
     @Published var isRecording = false
+    
+    @Published var publishedHeartRate: Int = 0
+   
     
     //Holds sensor data
     @Published var sensorData: [ModelSensorData] = [
@@ -35,7 +45,8 @@ class ViewModel: NSObject, ObservableObject, WKExtendedRuntimeSessionDelegate{
             gyroZ: "0.0",
             magX: "0.0",
             magY: "0.0",
-            magZ: "0.0"
+            magZ: "0.0",
+            heartbeat: "0"
         )
     ]
     
@@ -66,6 +77,12 @@ class ViewModel: NSObject, ObservableObject, WKExtendedRuntimeSessionDelegate{
              */
             self.watchToIOSConnector.viewModel = self
         }
+    
+    //Swift data works with SwiftUI therefore, WatchView uses this method to inject in the context to the app's logic class
+    func setContext(_ context: ModelContext) {
+            self.context = context
+            self.watchToIOSConnector.setContext(context)
+        }
 
     /*
      This function sets up an extended runtime session for background watch app execution
@@ -87,33 +104,100 @@ class ViewModel: NSObject, ObservableObject, WKExtendedRuntimeSessionDelegate{
         motionManager.deviceMotionUpdateInterval = 1.0 / 30.0
         
         //Variable that indicate the frame of reference for attitude-related motion data
-        //!! MAY NEED TO CHANGE
         let referenceFrame = CMAttitudeReferenceFrame.xTrueNorthZVertical
+        
+        collectHeartRate()
         
         //Check whether the reference frame is contained in the device and whether device motion is available
         if (CMMotionManager.availableAttitudeReferenceFrames().contains(referenceFrame) && motionManager.isDeviceMotionAvailable) {
-    
-                print("Starting to collect sensor data at 30 Hz")
+            
+            print("Starting to collect sensor data at 30 Hz")
+            
+            //Start reading sensor data
+            motionManager.startDeviceMotionUpdates(using: .xMagneticNorthZVertical, to: .main){ [weak self] (motion, error) in
+                guard let self = self else {return} // Avoids memory leaks
                 
-                //Start reading sensor data
-                motionManager.startDeviceMotionUpdates(using: .xMagneticNorthZVertical, to: .main){ [weak self] (motion, error) in
-                    guard let self = self else {return} // Avoids memory leaks
-                    if let error = error{
-                        print("Error: \(error.localizedDescription)")
-                    }
-                    
-                    self.getMotion(motion: motion) //call getMotion function
-                    
+                if let error = error{
+                    print("Error: \(error.localizedDescription)")
                 }
+                    
+                self.getMotion(motion: motion) //call getMotion function
+                    
+            }
         }
 
     } //End of startCollectingSensorData function
     
-    
-    func setContext(_ context: ModelContext) {
-            self.context = context
-            self.watchToIOSConnector.setContext(context)
+    //Code below taken from: GAP:https://medium.com/display-and-use-heart-rate-with-healthkit-on/display-and-use-heart-rate-with-healthkit-on-swiftui-for-watchos-2b26e29dc566
+    //Begin Copied Code
+    func collectHeartRate() {
+        
+        let healthKitType: Set = [
+                HKObjectType.quantityType(forIdentifier: HKQuantityTypeIdentifier.heartRate)!]
+        
+        //Authorization Step
+        healthStore.requestAuthorization(toShare: healthKitType, read: healthKitType){ success, error in
+            if success {
+                print("Authorization successful")
+                self.fetchHeartRate(quantityTypeIdentifier: .heartRate)
+            } else{
+                print("Authorization failed: \(String(describing:error))")
+            }
         }
+    }
+                          
+                          
+        func fetchHeartRate(quantityTypeIdentifier: HKQuantityTypeIdentifier){
+            
+            // We want data points from our current device
+            let devicePredicate = HKQuery.predicateForObjects(from: [HKDevice.local()])
+            
+            // A query that returns changes to the HealthKit store, including a snapshot of new changes and continuous monitoring as a long-running query.
+            let updateHandler: (HKAnchoredObjectQuery, [HKSample]?, [HKDeletedObject]?, HKQueryAnchor?, Error?) -> Void = {
+                query, samples, deletedObjects, queryAnchor, error in
+                
+                // A sample that represents a quantity, including the value and the units.
+                guard let samples = samples as? [HKQuantitySample] else {
+                    return
+                }
+                self.process(samples, type: quantityTypeIdentifier)
+            }
+            
+            let query = HKAnchoredObjectQuery(type: HKObjectType.quantityType(forIdentifier: quantityTypeIdentifier)!, predicate: devicePredicate, anchor: nil, limit: HKObjectQueryNoLimit, resultsHandler: updateHandler)
+                    
+            query.updateHandler = updateHandler
+            
+            // Stores the query reference
+            self.heartRateQuery = query
+                    
+            //Query execution
+            healthStore.execute(query)
+        }
+    
+    
+    
+        private func process(_ samples: [HKQuantitySample], type: HKQuantityTypeIdentifier) {
+            // variable initialization
+            var lastHeartRate = 0.0
+            
+            // cycle and value assignment
+            for sample in samples {
+                if type == .heartRate {
+                    lastHeartRate = sample.quantity.doubleValue(for: heartRateQuantity)
+                }
+                DispatchQueue.main.async {
+                    self.publishedHeartRate = Int(lastHeartRate)
+                }
+                
+//                print("New trigger")
+//                print(Date().timeIntervalSince1970)
+//                
+            }
+        }
+        
+        //End copied Code
+
+        
     
     @objc func timerFired(){
         stopCollectingSensorData()
@@ -122,7 +206,6 @@ class ViewModel: NSObject, ObservableObject, WKExtendedRuntimeSessionDelegate{
     
     //This method creates the struct of type SensorData so that the CSV file can be created
     private func getMotion(motion: CMDeviceMotion?){
-        
         
         guard let context = context else {
                     print("Context is not set!")
@@ -143,7 +226,7 @@ class ViewModel: NSObject, ObservableObject, WKExtendedRuntimeSessionDelegate{
             let newData = ModelSensorData( timestamp: timestamp, accelX: String(format: "%.5f", userAcceleration.x), accelY: String(format: "%.5f", userAcceleration.y),
                                           accelZ: String(format: "%.5f", userAcceleration.z), gyroX: String(format: "%.5f",  watchAttitude.pitch), gyroY: String(format: "%.5f",  watchAttitude.yaw),
                                           gyroZ: String(format: "%.5f",  watchAttitude.roll), magX: String(format: "%.5f", magneticVector.field.x), magY: String(format: "%.5f", magneticVector.field.y),
-                                          magZ: String(format: "%.5f", magneticVector.field.z)
+                                           magZ: String(format: "%.5f", magneticVector.field.z), heartbeat: "\(publishedHeartRate)"
             )
                 
             sensorData = [newData]
@@ -155,19 +238,25 @@ class ViewModel: NSObject, ObservableObject, WKExtendedRuntimeSessionDelegate{
     
     //This function sends the data to IOS application
     func stopCollectingSensorData() {
+        //Send the sensor data to IOS application
+        watchToIOSConnector.sendDataToIOS()
         
+        //Unwrap optional and stop heart rate data collection
+        if let query = heartRateQuery {
+            healthStore.stop(query)
+            heartRateQuery = nil
+        }
         // Stop updating sensor data
         motionManager.stopDeviceMotionUpdates()
         isRecording = false
-        
-        //Send the sensor data to IOS application
-        watchToIOSConnector.sendDataToIOS()
         
         //Stop the extended runtime
         session?.invalidate()
         session = nil
         
         //Reset the sensor data publisher for watch view
+        publishedHeartRate = 0;
+        
         sensorData = [
             ModelSensorData(
                 timestamp: Date().timeIntervalSince1970,

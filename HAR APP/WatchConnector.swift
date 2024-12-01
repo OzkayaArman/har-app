@@ -63,7 +63,7 @@ class WatchConnector: NSObject, WCSessionDelegate, ObservableObject{
                 print("Sensor Data was added")
                 for data in receivedData{
                     self.activityViewModel!.addSensorData(accelX: data.accelX, accelY: data.accelY, accelZ: data.accelZ, gyroX: data.gyroX, gyroY: data.gyroY, gyroZ: data.gyroZ, magX: data.magX,
-                                                      magY: data.magY, magZ: data.magZ)
+                                                          magY: data.magY, magZ: data.magZ, heartbeat: data.heartbeat)
                 }
                 self.activityViewModel?.exportReady = true
             }

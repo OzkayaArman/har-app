@@ -804,6 +804,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "WatchHARApp-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = WatchHARApp;
+				INFOPLIST_KEY_NSHealthClinicalHealthRecordsShareUsageDescription = "This app requires access to your Health data to record your activity for better insights.";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "This app requires access to your Health data to track and analyze your activity for better insights.";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "This app needs access to update your Health data for accurate activity tracking and analysis.";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
@@ -838,6 +839,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "WatchHARApp-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = WatchHARApp;
+				INFOPLIST_KEY_NSHealthClinicalHealthRecordsShareUsageDescription = "This app requires access to your Health data to record your activity for better insights.";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "This app requires access to your Health data to track and analyze your activity for better insights.";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "This app needs access to update your Health data for accurate activity tracking and analysis.";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";

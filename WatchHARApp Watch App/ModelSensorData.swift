@@ -24,6 +24,7 @@ class ModelSensorData: Codable{
         case magX
         case magY
         case magZ
+        case heartbeat
     }
     
     required init(from decoder: Decoder) throws {
@@ -38,6 +39,8 @@ class ModelSensorData: Codable{
         self.magX = try container.decode(String.self, forKey: .magX)
         self.magY = try container.decode(String.self, forKey: .magY)
         self.magZ = try container.decode(String.self, forKey: .magZ)
+        self.heartbeat = try container.decode(String.self, forKey: .heartbeat)
+        
     }
     
     var timestamp: Double
@@ -50,8 +53,10 @@ class ModelSensorData: Codable{
     var magX: String
     var magY: String
     var magZ: String
+    var heartbeat: String
     
     // Computed Variable describes the sensor data, useful for testing
+    //GAP: https://developer.apple.com/documentation/swift/string/init(describing:)-67ncf
     var description: String {
             return """
             SensorData:
@@ -59,10 +64,11 @@ class ModelSensorData: Codable{
             Accelerometer - X: \(String(describing: accelX)), Y: \(String(describing: accelY)), Z: \(String(describing: accelZ))
             Gyroscope - X: \(String(describing: gyroX)), Y: \(String(describing: gyroY)), Z: \(String(describing: gyroZ))
             Magnetometer - X: \(String(describing: magX)), Y: \(String(describing: magY)), Z: \(String(describing: magZ))
+            Heartbeat - X: \(String(describing: heartbeat))
             """
         }
     
-    init( timestamp: Double = Date().timeIntervalSince1970,accelX: String = "0.0", accelY: String = "0.0", accelZ: String = "0.0", gyroX: String = "0.0", gyroY: String = "0.0", gyroZ: String = "0.0", magX: String = "0.0", magY: String = "0.0", magZ: String = "0.0") {
+    init( timestamp: Double = Date().timeIntervalSince1970,accelX: String = "0.0", accelY: String = "0.0", accelZ: String = "0.0", gyroX: String = "0.0", gyroY: String = "0.0", gyroZ: String = "0.0", magX: String = "0.0", magY: String = "0.0", magZ: String = "0.0", heartbeat: String = "0") {
         self.timestamp = timestamp
         self.accelX = accelX
         self.accelY = accelY
@@ -73,6 +79,7 @@ class ModelSensorData: Codable{
         self.magX = magX
         self.magY = magY
         self.magZ = magZ
+        self.heartbeat = heartbeat
     }
     
 }
@@ -91,5 +98,6 @@ extension ModelSensorData {
         try container.encode(magX, forKey: .magX)
         try container.encode(magY, forKey: .magY)
         try container.encode(magZ, forKey: .magZ)
+        try container.encode(heartbeat, forKey: .heartbeat)
     }
 }

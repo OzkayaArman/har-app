@@ -25,7 +25,7 @@ struct WatchView: View {
             Divider()
             
             VStack(alignment: .leading, spacing:8 ){
-                HeartRateView()
+                HeartRateView(viewModel: viewModel)
                 
                 Text("User Acceleration")
                     .font(.headline)
@@ -97,22 +97,31 @@ struct WatchView: View {
 
     }
     
-    struct HeartRateView: View {
+}
 
-        var body: some View {
+struct HeartRateView: View {
+    @ObservedObject var viewModel: ViewModel
+    var body: some View {
+        HStack{
             VStack {
                 Image(systemName: "heart.square")
                     .resizable()
                     .scaledToFit()
                     .frame(width: 40, height: 40)
                 Text("BPM")
+                
 
             }
-            .padding()
+            Spacer()
+            Text("\(viewModel.publishedHeartRate)")
+                .font(.title)
+                .padding(.bottom)
+            Spacer()
         }
+
+
+        .padding()
     }
-    
-    
 }
 
 #Preview {
