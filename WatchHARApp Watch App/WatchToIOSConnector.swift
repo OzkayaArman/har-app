@@ -42,14 +42,15 @@ class WatchToIOSConnector: NSObject, WCSessionDelegate, ObservableObject {
             print("Context is not set. Unable to fetch data.")
             return
         }
-
+ 
+        
         do {
             // Fetch all `ModelSensorData` records using a FetchDescriptor
             let fetchDescriptor = FetchDescriptor<ModelSensorData>(
                 sortBy: [SortDescriptor(\.timestamp, order: .reverse)] // Sort by timestamp in descending order
             )
             let sensorDataArray = try context.fetch(fetchDescriptor)
-            
+            print("Fetching context: \(context)")
             
             if sensorDataArray.isEmpty {
                 print("No data found in the database to send.")

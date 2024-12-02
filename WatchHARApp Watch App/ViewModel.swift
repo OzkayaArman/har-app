@@ -11,6 +11,7 @@ import SwiftUI
 import WatchKit
 import SwiftData
 import HealthKit
+import CoreLocation
 
 /*
  GAP: https://medium.com/appledeveloperacademy-ufpe/swift-how-to-use-coremotion-to-obtain-sensorial-data-20b1b73a948a
@@ -19,18 +20,29 @@ import HealthKit
  by following the example in the URL above and the developer documentations.
 */
 
-class ViewModel: NSObject, ObservableObject, WKExtendedRuntimeSessionDelegate{
+class ViewModel: NSObject, ObservableObject, WKExtendedRuntimeSessionDelegate, CLLocationManagerDelegate{
     
     //context specifies where the app can commit data on device using Swift Data
     private var context: ModelContext?
     private var healthStore = HKHealthStore()
+    var locationManager: CLLocationManager?
     let heartRateQuantity = HKUnit(from: "count/min")
     var heartRateQuery: HKAnchoredObjectQuery?
     
     //Publisher variable for watch viw
     @Published var isRecording = false
-    
     @Published var publishedHeartRate: Int = 0
+    @Published var latitude = 0.0
+    @Published var longitude = 0.0
+    @Published var course = 0.0
+    @Published var speed = 0.0
+    @Published var speedAccuracy = 0.0
+    @Published var courseAccuracy = 0.0
+    @Published var altitude = 0.0
+    @Published var altitudeAccuracy = 0.0
+    @Published var coordinateAccuracy = 0.0
+    @Published var heading = 0.0
+    @Published var headingAccuracy = 0.0
    
     
     //Holds sensor data
@@ -46,7 +58,18 @@ class ViewModel: NSObject, ObservableObject, WKExtendedRuntimeSessionDelegate{
             magX: "0.0",
             magY: "0.0",
             magZ: "0.0",
-            heartbeat: "0"
+            heartbeat: "0",
+            latitude: "0.0",
+            longitude: "0.0"
+//            course: 0.0,
+//            speed: 0.0,
+//            speedAccuracy: 0.0,
+//            courseAccuracy: 0.0,
+//            altitude: 0.0,
+//            altitudeAccuracy: 0.0,
+//            coordinateAccuracy: 0.0,
+//            heading: 0.0,
+//            headingAccuracy: 0.0
         )
     ]
     
@@ -83,6 +106,12 @@ class ViewModel: NSObject, ObservableObject, WKExtendedRuntimeSessionDelegate{
             self.context = context
             self.watchToIOSConnector.setContext(context)
         }
+    
+    //This function stops sensor data collection after 180 seconds
+    @objc func timerFired(){
+        stopCollectingSensorData()
+        print("Stopping sensor data collection with timer")
+    }
 
     /*
      This function sets up an extended runtime session for background watch app execution
@@ -99,6 +128,11 @@ class ViewModel: NSObject, ObservableObject, WKExtendedRuntimeSessionDelegate{
         session = WKExtendedRuntimeSession()
         session?.delegate = self
         session?.start()
+        
+        //Configure location collection
+        locationManager = CLLocationManager()
+        locationManager?.delegate = self
+        locationManager?.requestWhenInUseAuthorization()
         
         // Sets the update interval of sensor read to 30 Hz
         motionManager.deviceMotionUpdateInterval = 1.0 / 30.0
@@ -127,6 +161,37 @@ class ViewModel: NSObject, ObservableObject, WKExtendedRuntimeSessionDelegate{
         }
 
     } //End of startCollectingSensorData function
+    
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        if status == .authorizedWhenInUse{
+            locationManager?.startUpdatingLocation()
+            locationManager?.startUpdatingHeading()
+        }
+    }
+    
+    //GAP Below function locationManager was written by following the example https://dwirandyh.medium.com/deep-dive-into-core-location-in-ios-a-step-by-step-guide-to-requesting-and-utilizing-user-location-fe8325462ea9
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let location = locations.last else { return }
+        //Location Information
+        latitude = location.coordinate.latitude
+        longitude = location.coordinate.longitude
+        coordinateAccuracy = location.horizontalAccuracy
+        
+        //Speed and course information
+        speed = location.speed
+        speedAccuracy = location.speedAccuracy
+        course = location.course
+        courseAccuracy = location.courseAccuracy
+        
+        //Altituded information
+        altitude = location.altitude
+        altitudeAccuracy = location.verticalAccuracy
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
+        heading = newHeading.trueHeading
+        headingAccuracy = newHeading.headingAccuracy
+    }
     
     //Code below taken from: GAP:https://medium.com/display-and-use-heart-rate-with-healthkit-on/display-and-use-heart-rate-with-healthkit-on-swiftui-for-watchos-2b26e29dc566
     //Begin Copied Code
@@ -188,21 +253,12 @@ class ViewModel: NSObject, ObservableObject, WKExtendedRuntimeSessionDelegate{
                 DispatchQueue.main.async {
                     self.publishedHeartRate = Int(lastHeartRate)
                 }
-                
-//                print("New trigger")
-//                print(Date().timeIntervalSince1970)
-//                
             }
         }
         
         //End copied Code
 
         
-    
-    @objc func timerFired(){
-        stopCollectingSensorData()
-        print("Stopping sensor data collection with timer")
-    }
     
     //This method creates the struct of type SensorData so that the CSV file can be created
     private func getMotion(motion: CMDeviceMotion?){
@@ -225,16 +281,16 @@ class ViewModel: NSObject, ObservableObject, WKExtendedRuntimeSessionDelegate{
             
             let newData = ModelSensorData( timestamp: timestamp, accelX: String(format: "%.5f", userAcceleration.x), accelY: String(format: "%.5f", userAcceleration.y),
                                           accelZ: String(format: "%.5f", userAcceleration.z), gyroX: String(format: "%.5f",  watchAttitude.pitch), gyroY: String(format: "%.5f",  watchAttitude.yaw),
-                                          gyroZ: String(format: "%.5f",  watchAttitude.roll), magX: String(format: "%.5f", magneticVector.field.x), magY: String(format: "%.5f", magneticVector.field.y),
-                                           magZ: String(format: "%.5f", magneticVector.field.z), heartbeat: "\(publishedHeartRate)"
-            )
+                                          gyroZ: String(format: "%.5f",  watchAttitude.roll), magX: String(format: "%.5f", magneticVector.field.x), magY: String(format: "%.5f",magneticVector.field.y),
+                                           magZ: String(format: "%.5f", magneticVector.field.z), heartbeat: "\(publishedHeartRate)",latitude: "\(latitude)", longitude: "\(longitude)", course: "\(course)", speed:"\(speed)", speedAccuracy: "\(speedAccuracy)",
+                                           courseAccuracy: "\(courseAccuracy)", altitude: "\(altitude)", altitudeAccuracy: "\(altitudeAccuracy)",coordinateAccuracy: "\(coordinateAccuracy)", heading: "\(heading)", headingAccuracy: "\(headingAccuracy)")
+                                            
+//                                        )
                 
             sensorData = [newData]
             context.insert(newData)
-            //print(newData)
         }
     }
-    
     
     //This function sends the data to IOS application
     func stopCollectingSensorData() {
@@ -248,7 +304,11 @@ class ViewModel: NSObject, ObservableObject, WKExtendedRuntimeSessionDelegate{
         }
         // Stop updating sensor data
         motionManager.stopDeviceMotionUpdates()
+        locationManager?.stopUpdatingLocation()
+        locationManager?.stopUpdatingHeading()
+        
         isRecording = false
+        
         
         //Stop the extended runtime
         session?.invalidate()
@@ -268,7 +328,20 @@ class ViewModel: NSObject, ObservableObject, WKExtendedRuntimeSessionDelegate{
                 gyroZ: "0.0",
                 magX: "0.0",
                 magY: "0.0",
-                magZ: "0.0"
+                magZ: "0.0",
+                heartbeat: "0",
+                latitude: "0.0",
+                longitude: "0.0"
+//                course: 0.0,
+//                speed: 0.0,
+//                speedAccuracy: 0.0,
+//                courseAccuracy: 0.0,
+//                altitude: 0.0,
+//                altitudeAccuracy: 0.0,
+//                coordinateAccuracy: 0.0,
+//                heading: 0.0,
+//                headingAccuracy: 0.0
+                
             )
         ]
         

@@ -807,6 +807,8 @@
 				INFOPLIST_KEY_NSHealthClinicalHealthRecordsShareUsageDescription = "This app requires access to your Health data to record your activity for better insights.";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "This app requires access to your Health data to track and analyze your activity for better insights.";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "This app needs access to update your Health data for accurate activity tracking and analysis.";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "This app will help you log your physical activity";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "This app will help you log your physical activity";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "Tutorial.HAR-APP";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -842,6 +844,8 @@
 				INFOPLIST_KEY_NSHealthClinicalHealthRecordsShareUsageDescription = "This app requires access to your Health data to record your activity for better insights.";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "This app requires access to your Health data to track and analyze your activity for better insights.";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "This app needs access to update your Health data for accurate activity tracking and analysis.";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "This app will help you log your physical activity";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "This app will help you log your physical activity";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "Tutorial.HAR-APP";
 				LD_RUNPATH_SEARCH_PATHS = (
