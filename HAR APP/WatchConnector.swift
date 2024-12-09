@@ -47,13 +47,6 @@ class WatchConnector: NSObject, WCSessionDelegate, ObservableObject{
             // Read the data from the received file URL
             let data = try Data(contentsOf: file.fileURL)
             
-            // Debug the raw JSON data
-//            if let jsonString = String(data: data, encoding: .utf8) {
-//                print("Raw JSON string: \(jsonString)")
-//            }else{
-//                print("Problem")
-//            }
-            
             // Attempt to decode the data as an array of SensorData
             let receivedData = try JSONDecoder().decode([SensorData].self, from: data)
             
@@ -87,7 +80,7 @@ class WatchConnector: NSObject, WCSessionDelegate, ObservableObject{
             session.sendMessage(data, replyHandler: nil)
             return true
         }else {
-            print("The iphone couldn't find a connected iphone")
+            print("The iphone couldn't find a connected watch")
             return false
         }
     }

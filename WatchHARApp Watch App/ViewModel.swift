@@ -60,16 +60,16 @@ class ViewModel: NSObject, ObservableObject, WKExtendedRuntimeSessionDelegate, C
             magZ: "0.0",
             heartbeat: "0",
             latitude: "0.0",
-            longitude: "0.0"
-//            course: 0.0,
-//            speed: 0.0,
-//            speedAccuracy: 0.0,
-//            courseAccuracy: 0.0,
-//            altitude: 0.0,
-//            altitudeAccuracy: 0.0,
-//            coordinateAccuracy: 0.0,
-//            heading: 0.0,
-//            headingAccuracy: 0.0
+            longitude: "0.0",
+            course: "0.0",
+            speed: "0.0",
+            speedAccuracy: "0.0",
+            courseAccuracy: "0.0",
+            altitude: "0.0",
+            altitudeAccuracy: "0.0",
+            coordinateAccuracy: "0.0",
+            heading: "0.0",
+            headingAccuracy: "0.0"
         )
     ]
     
@@ -171,7 +171,17 @@ class ViewModel: NSObject, ObservableObject, WKExtendedRuntimeSessionDelegate, C
     
     //GAP Below function locationManager was written by following the example https://dwirandyh.medium.com/deep-dive-into-core-location-in-ios-a-step-by-step-guide-to-requesting-and-utilizing-user-location-fe8325462ea9
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let location = locations.last else { return }
+        guard let location = locations.last else {
+            print("No location updates received.")
+            return
+        }
+        //Reduces location update to every 12 s
+        locationManager?.desiredAccuracy = kCLLocationAccuracyBestForNavigation
+        locationManager?.distanceFilter = kCLDistanceFilterNone
+        locationManager?.activityType = .fitness
+        print("Location updated: \(location)")
+        print("Speed: \(location.speed), Course: \(location.course)")
+        
         //Location Information
         latitude = location.coordinate.latitude
         longitude = location.coordinate.longitude
@@ -331,16 +341,16 @@ class ViewModel: NSObject, ObservableObject, WKExtendedRuntimeSessionDelegate, C
                 magZ: "0.0",
                 heartbeat: "0",
                 latitude: "0.0",
-                longitude: "0.0"
-//                course: 0.0,
-//                speed: 0.0,
-//                speedAccuracy: 0.0,
-//                courseAccuracy: 0.0,
-//                altitude: 0.0,
-//                altitudeAccuracy: 0.0,
-//                coordinateAccuracy: 0.0,
-//                heading: 0.0,
-//                headingAccuracy: 0.0
+                longitude: "0.0",
+                course: "0.0",
+                speed: "0.0",
+                speedAccuracy: "0.0",
+                courseAccuracy: "0.0",
+                altitude: "0.0",
+                altitudeAccuracy: "0.0",
+                coordinateAccuracy: "0.0",
+                heading: "0.0",
+                headingAccuracy: "0.0"
                 
             )
         ]

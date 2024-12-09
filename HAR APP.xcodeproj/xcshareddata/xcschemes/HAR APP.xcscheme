@@ -41,11 +41,18 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      shouldUseLaunchSchemeArgsEnv = "YES"
-      shouldAutocreateTestPlan = "YES">
+      shouldUseLaunchSchemeArgsEnv = "YES">
+      <TestPlans>
+         <TestPlanReference
+            reference = "container:TestPlan.xctestplan">
+         </TestPlanReference>
+         <TestPlanReference
+            reference = "container:IOSTestPlan.xctestplan">
+         </TestPlanReference>
+      </TestPlans>
       <Testables>
          <TestableReference
-            skipped = "NO"
+            skipped = "YES"
             parallelizable = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
@@ -63,6 +70,17 @@
                BlueprintIdentifier = "CB0539472CACA02200864980"
                BuildableName = "HAR APPUITests.xctest"
                BlueprintName = "HAR APPUITests"
+               ReferencedContainer = "container:HAR APP.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "CB12AFF62D05EEF300D5F251"
+               BuildableName = "HAR_APP_Unit_Tests.xctest"
+               BlueprintName = "HAR_APP_Unit_Tests"
                ReferencedContainer = "container:HAR APP.xcodeproj">
             </BuildableReference>
          </TestableReference>

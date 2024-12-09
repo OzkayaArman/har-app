@@ -12,11 +12,12 @@ import AuthenticationServices
 import Foundation
 
 
-
+//This is the first page the user sees and logs in to the app
 struct LoginPageView: View {
     
     @Environment(\.colorScheme) var colorScheme
     @ObservedObject var login: loginModel
+    @State private var promptLoginAgain = false
     
     var body: some View {
     
@@ -36,6 +37,13 @@ struct LoginPageView: View {
                 .minimumScaleFactor(0.60)
                 .frame(width: 350, height: 35, alignment: .leading)
                 .padding(.horizontal)
+                .alert(isPresented: $promptLoginAgain) {
+                        Alert(
+                            title: Text("Authentication failed"),
+                            message: Text("\(login.errorMessage)"),
+                            dismissButton: .default(Text("Back To Login Page"))
+                        )
+                }
                 
             Spacer()
             ScrollView{
@@ -58,7 +66,7 @@ struct LoginPageView: View {
                                 RoundedRectangle(cornerRadius: 8) // Adds border
                                 .stroke(Color.blue, lineWidth: 2)
                             )
-                        DatePicker("Birthday", selection: $login.birthdate,
+                        DatePicker("Birthday *", selection: $login.birthdate,
                                    displayedComponents: .date)
                             .padding(10)
                             .overlay(
@@ -70,8 +78,7 @@ struct LoginPageView: View {
                     .padding(15)
                 
                     Button{
-                        login.authenticated = true
-                        login.loadUserData()
+                        promptLoginAgain = !login.checkUserDataFromForm()
                     } label: {
                         Label("Login", systemImage: "person.fill.checkmark")
                             .frame(width: 350, height: 5 , alignment: .center)
@@ -103,7 +110,7 @@ struct LoginPageView: View {
     
     /*
     //https://www.youtube.com/watch?v=O2FVDzoAB34&t=654s
-     GAP: The following code and part of loaduser data function inn login model that enables login through apple id was developed by following the tutorial above
+     GAP: The following code and loginfunction inn login model that enables login through apple id was developed by following the tutorial above
     */
     func configure(_ request: ASAuthorizationAppleIDRequest) {
         request.requestedScopes = [.fullName, .email]
@@ -119,19 +126,17 @@ struct LoginPageView: View {
                 if let appleUser = AppleUser(credentials: appleIdCredentials),
                    let appleUserData = try? JSONEncoder().encode(appleUser) {
                     UserDefaults.standard.setValue(appleUserData, forKey: "appleUser")
-                    print("saved apple user", appleUser)
-                    login.authenticated = true
-                    login.loadUserData()
+                    print("Saved apple user", appleUser)
+                    promptLoginAgain = !login.loadUserDataFromAppleID()
                 } else {
                     //For returning users obtain details from UserDefaults
-                    print("missing some fields or returning user",
+                    print("Returning user",
                           appleIdCredentials.fullName ?? "No full name",
                           appleIdCredentials.user)
                     guard let appleUserData = UserDefaults.standard.data(forKey: "appleUser"),
                         let appleUser = try? JSONDecoder().decode(AppleUser.self, from: appleUserData) else { return }
                     print(appleUser)
-                    login.authenticated = true
-                    login.loadUserData()
+                    promptLoginAgain = !login.loadUserDataFromAppleID()
                 }
             default:
                 print(auth.credential)

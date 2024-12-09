@@ -85,15 +85,12 @@ struct SensorData: Codable, Identifiable {
     }
     
     
-    
-    
     ///GAP: https://swiftpackageindex.com/scottmatthewman/swiftcsvencoder/0.2.0/documentation/swiftcsvencoder/incorporatingcsv
     //The following code for creating a csv file was obtained from the apple developer documentation above
     // Begin Copied Code
     
     //This struct represents the exported data
-    //The idea of CSVFile having to conform to FileDocument, configuration and filewrapper functions was obtained from ChatGPT upon failure to
-    //implement .fileexporter modifier in ActivityDetailView
+    //The idea of CSVFile having to conform to FileDocument, and the code for configuration (constructor) and filewrapper functions was obtained from ChatGPT upon failure to implement .fileexporter modifier in ActivityDetailView
     
     struct CSVFile: FileDocument {
         static var readableContentTypes: [UTType] { [.commaSeparatedText] }

@@ -66,6 +66,17 @@
                ReferencedContainer = "container:HAR APP.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "CB12AFF62D05EEF300D5F251"
+               BuildableName = "HAR_APP_Unit_Tests.xctest"
+               BlueprintName = "HAR_APP_Unit_Tests"
+               ReferencedContainer = "container:HAR APP.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction

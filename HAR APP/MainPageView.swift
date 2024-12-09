@@ -16,7 +16,7 @@ struct MainPageView: View {
      ActivityGridView is the main UI for mainPageView
      It displays activities user can select to start a sensor recording
     */
-    @StateObject var activities = ActivityMetaData()
+    @StateObject var activityList = ActivityMetaData()
     
     //Creating instance of viewModel class which will be passed down in view hierarchy
     @StateObject var viewModel = ActivitiesViewModel()
@@ -26,16 +26,15 @@ struct MainPageView: View {
         
         if(login.authenticated){
             TabView{
-                ActivityGridView(viewModel: viewModel,login:login,activityMetaData: activities)
-                        .navigationTitle("Home")
+                ActivityGridView(viewModel: viewModel,login:login,activityList: activityList)
+                    .navigationTitle("Home")
                     .tabItem{
                         Image(systemName: "house" )
                         Text("Home")
                     }
             
                 AccountView(loginModel:login)
-                        .navigationTitle("Account & Preferences")
-    
+                    .navigationTitle("Account & Preferences")
                     .tabItem {
                         Image(systemName: "person")
                         Text("Account & Preferences")
@@ -54,7 +53,7 @@ struct MainPageView: View {
 struct ActivityGridView: View {
     @ObservedObject var viewModel: ActivitiesViewModel
     @ObservedObject var login: loginModel
-    @ObservedObject var activityMetaData: ActivityMetaData
+    @ObservedObject var activityList: ActivityMetaData
     @State var addingNewActivity = false
     @State var newActivityName = ""
     
@@ -64,6 +63,7 @@ struct ActivityGridView: View {
             VStack{
                 //Button for recording a new activity
                 Button {
+                    //Triggers a sheet
                     addingNewActivity = true
                 } label: {
                     Label("Record New Activity", systemImage: "figure.highintensity.intervaltraining")
@@ -76,7 +76,7 @@ struct ActivityGridView: View {
                 //Scrollable main grid view
                 ScrollView {
                     LazyVGrid(columns: viewModel.columns) {
-                        ForEach(activityMetaData.activityArray) { activitySelected in
+                        ForEach(activityList.activityArray) { activitySelected in
                             NavigationLink(value: activitySelected){
                                 ActivityIconViewMain(activity: activitySelected)
                             }
@@ -95,19 +95,19 @@ struct ActivityGridView: View {
             NewActivitySheet(
                 addingNewActivity: $addingNewActivity,
                 newActivityName: $newActivityName,
-                activityMetaData: activityMetaData
+                activityMetaData: activityList
             )
         })
     }
+    
     //Executed when sheet is dismissed to add the new activity to the data array
     func didDismiss() {
-        if(!newActivityName.isEmpty) {
-            activityMetaData.activityArray.append(
-                Activities(name: newActivityName, imageName: "trophy.circle.fill")
-            )
+        activityList.activityArray.append(
+            Activities(name: newActivityName, imageName: "trophy.circle.fill")
+        )
             // Clear the input field for future activity additions
             newActivityName = ""
-        }
+        
     }
     
 }
@@ -116,13 +116,21 @@ struct NewActivitySheet: View {
     @Binding var addingNewActivity: Bool
     @Binding var newActivityName: String
     @ObservedObject var activityMetaData: ActivityMetaData
-
+    
+    
+    func checkActivityNameIsNotEmpty() -> Bool{
+        if(newActivityName.isEmpty){
+            return false
+        }
+        return true
+    }
     var body: some View {
         VStack {
             // Close Button
             HStack {
                 Spacer()
                 Button {
+                    //Triggers navigation back to the original page
                     addingNewActivity = false
                 } label: {
                     Image(systemName: "xmark")
@@ -139,6 +147,17 @@ struct NewActivitySheet: View {
                 .fontWeight(.semibold)
                 .padding(.top)
             
+            Text("Once you click the save new activity button, you will be navigatedd back to the home page. Then, you can start sensor recordings for your new activity type by tapping on the icon for the new activity type you specified.")
+                .font(.subheadline)
+                .fontWeight(.medium)
+                .padding()
+            
+            Text("Note: You have to specify your desired activity's name to save a new activity.")
+                .font(.subheadline)
+                .fontWeight(.semibold)
+                .padding()
+            
+            
             Spacer()
             
             // Form Section for Activity Name Input
@@ -153,7 +172,9 @@ struct NewActivitySheet: View {
             
             // Save Button
             Button {
-                addingNewActivity = false
+                if(checkActivityNameIsNotEmpty()){
+                    addingNewActivity = false
+                }
             } label: {
                 Label("Save New Activity", systemImage: "square.and.arrow.down.fill")
             }

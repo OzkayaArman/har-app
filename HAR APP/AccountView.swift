@@ -10,13 +10,13 @@ import SwiftUI
 struct AccountView: View {
     @State private var firstName = ""
     @State private var lastName = ""
-    @State private var email = ""
     @State private var birthdate = Date()
+    
     @State  private var accelerometer = true;
     @State private var gyroscope = true;
     @State private var magnetometer = true;
-    @State private var gps = false;
-    @State private var heartRateSensor = false;
+    @State private var gps = true;
+    @State private var heartRateSensor = true;
     @State private var music = false;
     
     @ObservedObject var loginModel: loginModel
@@ -27,15 +27,13 @@ struct AccountView: View {
                 Section(header: Text("Personal Info")){
                     TextField("First Name", text: $firstName)
                     TextField("Last Name", text: $lastName)
-                    TextField("Email", text: $email)
-                        .keyboardType(.emailAddress)
-                        .autocapitalization(.none)
-                        .disableAutocorrection(true)
                     DatePicker("Birthday", selection: $birthdate,
                                displayedComponents: .date)
                     
                     Button{
-                        
+                        loginModel.changeFirstname(newName: self.firstName)
+                        loginModel.changeLastname(newLastName: self.lastName)
+                        loginModel.changeBirthdate(newBirthDate: self.birthdate)
                     } label: {
                         Text("Save Changes")
                     }
@@ -59,6 +57,7 @@ struct AccountView: View {
     func loadUserData() {
         firstName = loginModel.firstname
         lastName = loginModel.lastname
+        birthdate = loginModel.birthdate
     }
 
 }

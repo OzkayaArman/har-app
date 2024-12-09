@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "225EFD43-67EE-4A1E-BAFF-D6F1AAD5FCDE",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testTimeoutsEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:HAR APP.xcodeproj",
+        "identifier" : "CB12AFF62D05EEF300D5F251",
+        "name" : "HAR_APP_Unit_Tests"
+      }
+    }
+  ],
+  "version" : 1
+}
