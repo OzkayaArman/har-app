@@ -106,8 +106,8 @@ final class AuthenticationTests: XCTestCase {
     func testChangingFirstname(){
         //Arrange
         let login = loginModel()
-        login.firstname = "Jack"
-        login.lastname = "Sparrow"
+        login.firstname = "Adam"
+        login.lastname = "Smith"
         let dateComponents = DateComponents(year: 2001, month: 8, day: 8)
         guard let date = Calendar.current.date(from: dateComponents) else {return}
         login.birthdate = date
@@ -121,7 +121,7 @@ final class AuthenticationTests: XCTestCase {
         //Arrange
         let login = loginModel()
         login.firstname = "Jack"
-        login.lastname = "Sparrow"
+        login.lastname = "Brown"
         let dateComponents = DateComponents(year: 2001, month: 8, day: 8)
         guard let date = Calendar.current.date(from: dateComponents) else {return}
         login.birthdate = date

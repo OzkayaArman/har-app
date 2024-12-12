@@ -41,7 +41,7 @@ struct SensorData: Codable, Identifiable {
     final class ActivitiesViewModel: ObservableObject {
         
         @Published var exportReady = false
-        
+        var preferencesModel: Preferences
         
         var sensorData: [SensorData] = []
         
@@ -54,8 +54,9 @@ struct SensorData: Codable, Identifiable {
                                    GridItem(.flexible()),
                                    GridItem(.flexible())]
         
-        init() {
-            self.watchConnector = WatchConnector()
+        init(preferencesModel:Preferences) {
+            self.preferencesModel = preferencesModel
+            self.watchConnector = WatchConnector(preferencesModel: preferencesModel)
             self.watchConnector.activityViewModel = self // Pass activityViewModel reference
         }
         

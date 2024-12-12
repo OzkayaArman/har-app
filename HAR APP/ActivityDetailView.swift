@@ -14,13 +14,14 @@ struct ActivityDetailView: View {
     //Observed object expects viewModel from parent view which is MainPageView
     @ObservedObject var viewModel: ActivitiesViewModel
     @ObservedObject var loginModel: loginModel
+    @ObservedObject var preferencesModel: Preferences
     
     @State private var startActivity = false
     @State private var showingExporter = false
     @State private var showConfirmation = false
     @State private var showAlertConnectivity = false
     @State private var csvFile: CSVFile?
-    @State var countdown = 180
+   
     
     let timer = Timer.publish(every: 1,tolerance: 0.5, on: .main, in: .common).autoconnect()
 
@@ -49,20 +50,20 @@ struct ActivityDetailView: View {
                 .multilineTextAlignment(.center)
                 .padding()
             
-            Text("\(countdown) s")
+            Text("\(Int(preferencesModel.sessionDurationView)) s")
                 .font(.system(size: 70))
                 .fontWeight(.light)
                 .foregroundColor(.red)
                 .frame(width:250, height:150)
                 .onReceive(timer) { time in
-                    if (countdown == 0){
+                    if (preferencesModel.sessionDurationView == 0){
                         timer.upstream.connect().cancel()
-                        countdown = 180
+                        preferencesModel.sessionDurationView = preferencesModel.sessionDuration
                         startActivity = false
                         //Call clean sensor data function
                         viewModel.cleanSensorData()
-                    } else if (countdown > 0 && startActivity == true){
-                        countdown -= 1
+                    } else if (preferencesModel.sessionDurationView  > 0 && startActivity == true){
+                        preferencesModel.sessionDurationView  -= 1
                     }
                     
                 }
@@ -73,7 +74,7 @@ struct ActivityDetailView: View {
                 //Start Activity Button
     
                 ButtonView(labelString: "Start Activity", systemImageString: "play.fill", commandToSend: "Start",
-                           startActivity: $startActivity, countdown: $countdown, showAlertConnectivity: $showAlertConnectivity, viewModel: viewModel)
+                           startActivity: $startActivity, countdown: $preferencesModel.sessionDurationView, showAlertConnectivity: $showAlertConnectivity, viewModel: viewModel, preferencesModel: preferencesModel)
                 .alert(isPresented: $showAlertConnectivity) {
                             Alert(
                                 title: Text("Oops"),
@@ -85,7 +86,7 @@ struct ActivityDetailView: View {
                 //Stop Activity Button
                 
                 ButtonView(labelString: "Stop Activity", systemImageString: "stop.fill", commandToSend: "Stop",
-                           startActivity: $startActivity, countdown: $countdown,showAlertConnectivity: $showAlertConnectivity, viewModel: viewModel)
+                           startActivity: $startActivity, countdown: $preferencesModel.sessionDurationView ,showAlertConnectivity: $showAlertConnectivity, viewModel: viewModel, preferencesModel: preferencesModel)
                 
             }
             
@@ -103,9 +104,10 @@ struct ButtonView: View {
     var systemImageString: String
     var commandToSend : String
     @Binding var startActivity: Bool
-    @Binding var countdown: Int
+    @Binding var countdown: Double
     @Binding var showAlertConnectivity:Bool
     @ObservedObject var viewModel: ActivitiesViewModel
+    @ObservedObject var preferencesModel: Preferences
     
     var body: some View {
         Button {
@@ -122,9 +124,11 @@ struct ButtonView: View {
             }else{
                 if(status){
                     startActivity = false
-                    countdown = 180
+                    countdown = preferencesModel.sessionDuration
                     //Call clean sensor data function
                     viewModel.cleanSensorData()
+                }else{
+                    showAlertConnectivity = true
                 }
             }
             
@@ -201,5 +205,5 @@ struct ExportView: View {
 
 
 #Preview {
-    ActivityDetailView(activity: ActivityMetaData().sampleActivity, viewModel: ActivitiesViewModel(),loginModel: loginModel())
+    ActivityDetailView(activity: ActivityMetaData().sampleActivity, viewModel: ActivitiesViewModel(preferencesModel: Preferences()),loginModel: loginModel(), preferencesModel: Preferences())
 }

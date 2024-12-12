@@ -18,22 +18,38 @@ struct MainPageView: View {
     */
     @StateObject var activityList = ActivityMetaData()
     
+    
+    @StateObject var preferencesModel: Preferences
+    @StateObject var viewModel: ActivitiesViewModel
+    
+    
+    //Creating instance of Preferences class which will be passed down in view hierarchy
     //Creating instance of viewModel class which will be passed down in view hierarchy
-    @StateObject var viewModel = ActivitiesViewModel()
+    //GAP: The code for the initializer below was obtained from ChatGPT
+    init() {
+            let prefs = Preferences()
 
+            let vm = ActivitiesViewModel(preferencesModel: prefs)
+            
+            _preferencesModel = StateObject(wrappedValue: prefs)
+            
+            _viewModel = StateObject(wrappedValue: vm)
+            print("AAAA")
+    }
+    
     var body: some View {
         
         
         if(login.authenticated){
             TabView{
-                ActivityGridView(viewModel: viewModel,login:login,activityList: activityList)
+                ActivityGridView(viewModel: viewModel,login:login,activityList: activityList, preferencesModel: preferencesModel)
                     .navigationTitle("Home")
                     .tabItem{
                         Image(systemName: "house" )
                         Text("Home")
                     }
             
-                AccountView(loginModel:login)
+                AccountView(preferencesModel: preferencesModel, loginModel:login)
                     .navigationTitle("Account & Preferences")
                     .tabItem {
                         Image(systemName: "person")
@@ -54,6 +70,7 @@ struct ActivityGridView: View {
     @ObservedObject var viewModel: ActivitiesViewModel
     @ObservedObject var login: loginModel
     @ObservedObject var activityList: ActivityMetaData
+    @ObservedObject var preferencesModel: Preferences
     @State var addingNewActivity = false
     @State var newActivityName = ""
     
@@ -86,7 +103,7 @@ struct ActivityGridView: View {
                 .navigationTitle("🎯 Start A Workout")
                 //Each tap on an activity navigates the user to the ActivityDetailView UI
                 .navigationDestination(for: Activities.self){ activitySelected in
-                    ActivityDetailView(activity: activitySelected, viewModel: viewModel,loginModel: login)
+                    ActivityDetailView(activity: activitySelected, viewModel: viewModel,loginModel: login, preferencesModel: preferencesModel)
                 }
             }
         }
@@ -211,6 +228,6 @@ struct MainPageView_Previews: PreviewProvider {
     static var previews: some View {
         let login = loginModel()
         login.authenticated = true
-        return MainPageView(login: login)
+        return MainPageView()
     }
 }

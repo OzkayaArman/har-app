@@ -64,6 +64,31 @@ class ModelSensorData: Codable{
         self.headingAccuracy = try container.decode(String.self, forKey: .headingAccuracy)
     }
     
+    init(){
+        self.timestamp = Date().timeIntervalSince1970
+        self.accelX = "0.0"
+        self.accelY = "0.0"
+        self.accelZ = "0.0"
+        self.gyroX = "0.0"
+        self.gyroY = "0.0"
+        self.gyroZ = "0.0"
+        self.magX = "0.0"
+        self.magY = "0.0"
+        self.magZ = "0.0"
+        self.heartbeat = "0"
+        self.latitude = "0.0"
+        self.longitude = "0.0"
+        self.course = "0.0"
+        self.speed = "0.0"
+        self.speedAccuracy = "0.0"
+        self.courseAccuracy = "0.0"
+        self.altitude = "0.0"
+        self.altitudeAccuracy = "0.0"
+        self.coordinateAccuracy = "0.0"
+        self.heading = "0.0"
+        self.headingAccuracy = "0.0"
+    }
+    
     var timestamp: Double
     var accelX: String
     var accelY: String

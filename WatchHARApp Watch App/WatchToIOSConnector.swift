@@ -26,6 +26,7 @@ class WatchToIOSConnector: NSObject, WCSessionDelegate, ObservableObject {
         super.init()
         session.delegate = self
         session.activate()
+        print("Constructor watch")
     }
     
     func setContext(_ context: ModelContext) {
@@ -33,8 +34,12 @@ class WatchToIOSConnector: NSObject, WCSessionDelegate, ObservableObject {
         }
     
     func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: (any Error)?) {
-        
+        if let error = error {
+            print("WCSession activation failed: \(error.localizedDescription)")
+            return
+        }
     }
+    
     
     func sendDataToIOS() {
         // Ensure the context is available
@@ -50,32 +55,15 @@ class WatchToIOSConnector: NSObject, WCSessionDelegate, ObservableObject {
                 sortBy: [SortDescriptor(\.timestamp, order: .reverse)] // Sort by timestamp in descending order
             )
             let sensorDataArray = try context.fetch(fetchDescriptor)
-            print("Fetching context: \(context)")
             
             if sensorDataArray.isEmpty {
                 print("No data found in the database to send.")
                 return
             }
-            
-//            for data in sensorDataArray{
-//                print("Acceleration")
-//                print(data.accelX)
-//            }
 
             // Convert the fetched data into JSON
             let encoder = JSONEncoder()
             encoder.outputFormatting = .prettyPrinted
-            
-//            do {
-//                let jsonData = try encoder.encode(sensorDataArray)
-//                if let jsonString = String(data: jsonData, encoding: .utf8) {
-//                    print("Encoded JSON data: \(jsonString)")
-//                }
-//            } catch let EncodingError.invalidValue(value, context) {
-//                print("Invalid value '\(value)' for encoding: \(context.debugDescription)")
-//            } catch {
-//                print("Unexpected encoding error: \(error.localizedDescription)")
-//            }
             
             let jsonData = try encoder.encode(sensorDataArray)
 
@@ -93,19 +81,30 @@ class WatchToIOSConnector: NSObject, WCSessionDelegate, ObservableObject {
 
 
 
-    
     //Receiving Messsage From Iphone
-    func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
-        if let receivedMessage = message["message"] as? String {
-                print("Message received from Iphone: \(receivedMessage)")
+    func session(_ session: WCSession, didReceive file: WCSessionFile) {
+        print("File received from Iphone with metadata: \(String(describing: file.metadata))")
+        
+        do {
+            // Read the data from the received file URL
+            let data = try Data(contentsOf: file.fileURL)
+            
+            // Attempt to decode the data as an array of SensorData
+            let receivedData = try JSONDecoder().decode(PreferencesData.self, from: data)
+            
+            // Pass the decoded sensor data array to the ViewModel
             DispatchQueue.main.async {
-                if receivedMessage == "Start" {
-                    self.viewModel?.startCollectingSensorData()
-                } else if receivedMessage == "Stop" {
+                if(receivedData.message == "Start"){
+                    // Method to handle received sensor data
+                    print("Preferences data was received")
+                    self.viewModel?.setPreferences(preferencesIn: receivedData)
+                }else{
                     self.viewModel?.stopCollectingSensorData()
                 }
             }
-
+            
+        } catch {
+            print("Failed to decode sensor data from received file with error: \(error.localizedDescription)")
         }
     }
     

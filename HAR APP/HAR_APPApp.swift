@@ -12,7 +12,7 @@ struct HAR_APPApp: App {
 
     var body: some Scene {
         WindowGroup {
-            MainPageView(login: loginModel())
+            MainPageView()
                 .preferredColorScheme(.light)
         }
     }

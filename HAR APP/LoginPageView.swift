@@ -18,6 +18,7 @@ struct LoginPageView: View {
     @Environment(\.colorScheme) var colorScheme
     @ObservedObject var login: loginModel
     @State private var promptLoginAgain = false
+    @State private var datePickerWheel = false
     
     var body: some View {
     
@@ -52,6 +53,7 @@ struct LoginPageView: View {
                         TextField("First Name *", text: $login.firstname)
                             .font(.subheadline)
                             .fontWeight(.semibold)
+                            .foregroundStyle(Color.black)
                             .padding(10)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 8) // Adds border
@@ -61,18 +63,40 @@ struct LoginPageView: View {
                         TextField("Last Name", text: $login.lastname)
                             .font(.subheadline)
                             .fontWeight(.bold)
+                            .foregroundStyle(Color.black)
                             .padding(10)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 8) // Adds border
                                 .stroke(Color.blue, lineWidth: 2)
                             )
-                        DatePicker("Birthday *", selection: $login.birthdate,
-                                   displayedComponents: .date)
-                            .padding(10)
+                        HStack{
+                            Button{
+                                datePickerWheel.toggle()
+                            } label: {
+                                Text("Birthday *")
+                                    .font(.subheadline)
+                                    .foregroundStyle(.black)
+                                    .padding()
+                            }
+                            
                             .overlay(
                                 RoundedRectangle(cornerRadius: 8) // Adds border
                                 .stroke(Color.blue, lineWidth: 2)
                             )
+                            
+                            Spacer()
+                        }
+             
+                        
+                        if(datePickerWheel){
+                            DatePicker("Birthday *", selection: $login.birthdate,
+                                       displayedComponents: [.date])
+                            .datePickerStyle(WheelDatePickerStyle())
+                            .labelsHidden()
+                            .frame(width:100, height:100)
+                            .padding(10)
+                        }
+
                     }
                     
                     .padding(15)

@@ -58,7 +58,6 @@ final class NewActivityAdditionTests: XCTestCase {
         let viewModel = ActivitiesViewModel()
         let activityGridView = ActivityGridView(viewModel: viewModel, login: login, activityList: activityList, newActivityName:"Rugby")
         activityGridView.didDismiss()
-
         
         // Assert
         XCTAssertTrue(activityList.activityArray.contains(where: { $0.name == "Rugby" }))

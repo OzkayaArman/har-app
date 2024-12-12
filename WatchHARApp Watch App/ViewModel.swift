@@ -21,6 +21,8 @@ import CoreLocation
 */
 
 class ViewModel: NSObject, ObservableObject, WKExtendedRuntimeSessionDelegate, CLLocationManagerDelegate{
+    var sensorSpecifier: PreferencesData
+    
     
     //context specifies where the app can commit data on device using Swift Data
     private var context: ModelContext?
@@ -29,9 +31,9 @@ class ViewModel: NSObject, ObservableObject, WKExtendedRuntimeSessionDelegate, C
     let heartRateQuantity = HKUnit(from: "count/min")
     var heartRateQuery: HKAnchoredObjectQuery?
     
-    //Publisher variable for watch viw
+    //Publisher variable for watch view
     @Published var isRecording = false
-    @Published var publishedHeartRate: Int = 0
+    @Published var publishedHeartRate = 0
     @Published var latitude = 0.0
     @Published var longitude = 0.0
     @Published var course = 0.0
@@ -46,33 +48,7 @@ class ViewModel: NSObject, ObservableObject, WKExtendedRuntimeSessionDelegate, C
    
     
     //Holds sensor data
-    @Published var sensorData: [ModelSensorData] = [
-        ModelSensorData(
-            timestamp: Date().timeIntervalSince1970,
-            accelX: "0.0",
-            accelY: "0.0",
-            accelZ: "0.0",
-            gyroX: "0.0",
-            gyroY: "0.0",
-            gyroZ: "0.0",
-            magX: "0.0",
-            magY: "0.0",
-            magZ: "0.0",
-            heartbeat: "0",
-            latitude: "0.0",
-            longitude: "0.0",
-            course: "0.0",
-            speed: "0.0",
-            speedAccuracy: "0.0",
-            courseAccuracy: "0.0",
-            altitude: "0.0",
-            altitudeAccuracy: "0.0",
-            coordinateAccuracy: "0.0",
-            heading: "0.0",
-            headingAccuracy: "0.0"
-        )
-    ]
-    
+    @Published var sensorData: [ModelSensorData] = [ModelSensorData()]
     
     
     //ViewModel class properties, marked with private for security best practices
@@ -88,18 +64,28 @@ class ViewModel: NSObject, ObservableObject, WKExtendedRuntimeSessionDelegate, C
 
     //Constructor for the ViewModel which also initializes an instance of the watchToIOSConnector
     override init() {
+        //This is a dummy initialization step, the real preferences are relayed when the user taps start activity button on the ios app.
+        sensorSpecifier = PreferencesData(message: "Start", accelerometer: "true", gyroscope: "true", magnetometer: "true" , gps: "true", heartRateSensor: "true", sessionDuration: "180.0")
+        
+        //Initialize watchToIOSConnector property, this property is an instance of WatchToIOSConnector class
+        self.watchToIOSConnector = WatchToIOSConnector()
+        super.init()
             
-            //Initialize watchToIOSConnector property, this property is an instance of WatchToIOSConnector class
-            self.watchToIOSConnector = WatchToIOSConnector()
-            super.init()
-            
-            /*
-            The viewModel property of watchToIOSConnector instance is set to be self (an instance of ViewModel)
-            enabling the connector to access viewModel's properties and methods.
-            This is crucial for the phone application to control the watch application
-             */
-            self.watchToIOSConnector.viewModel = self
-        }
+        /*
+        The viewModel property of watchToIOSConnector instance is set to be self (an instance of ViewModel)
+        enabling the connector to access viewModel's properties and methods.
+        This is crucial for the phone application to control the watch application
+        */
+        self.watchToIOSConnector.viewModel = self
+        
+        locationManager = CLLocationManager()
+    }
+    
+    //Updates the preferences for which sensor will be utilized to collect data
+    func setPreferences(preferencesIn: PreferencesData){
+        self.sensorSpecifier = preferencesIn
+        startCollectingSensorData()
+    }
     
     //Swift data works with SwiftUI therefore, WatchView uses this method to inject in the context to the app's logic class
     func setContext(_ context: ModelContext) {
@@ -107,11 +93,6 @@ class ViewModel: NSObject, ObservableObject, WKExtendedRuntimeSessionDelegate, C
             self.watchToIOSConnector.setContext(context)
         }
     
-    //This function stops sensor data collection after 180 seconds
-    @objc func timerFired(){
-        stopCollectingSensorData()
-        print("Stopping sensor data collection with timer")
-    }
 
     /*
      This function sets up an extended runtime session for background watch app execution
@@ -122,17 +103,14 @@ class ViewModel: NSObject, ObservableObject, WKExtendedRuntimeSessionDelegate, C
      This function also sets up motion manager framework for sensor data collection
      */
     func startCollectingSensorData(){
+        //Toggle the variable to inform user the watch is collecting data through the watch UI
         isRecording = true
-        _ = Timer.scheduledTimer(timeInterval: 180, target: self, selector: #selector(timerFired), userInfo: nil, repeats: false)
+  
         //Configure extended runtime session
         session = WKExtendedRuntimeSession()
         session?.delegate = self
         session?.start()
         
-        //Configure location collection
-        locationManager = CLLocationManager()
-        locationManager?.delegate = self
-        locationManager?.requestWhenInUseAuthorization()
         
         // Sets the update interval of sensor read to 30 Hz
         motionManager.deviceMotionUpdateInterval = 1.0 / 30.0
@@ -140,7 +118,19 @@ class ViewModel: NSObject, ObservableObject, WKExtendedRuntimeSessionDelegate, C
         //Variable that indicate the frame of reference for attitude-related motion data
         let referenceFrame = CMAttitudeReferenceFrame.xTrueNorthZVertical
         
-        collectHeartRate()
+        //Collect heart rate data if the preferences for collecting heart rate data was set
+        if(sensorSpecifier.heartRateSensor == "true"){
+            collectHeartRate()
+        }
+        
+        //Collect GPS data if the preferences for collecting GPS data was set
+        if(sensorSpecifier.gps == "true"){
+            //Configure location collection
+            locationManager = CLLocationManager()
+            locationManager?.delegate = self
+            locationManager?.requestWhenInUseAuthorization()
+        }
+       
         
         //Check whether the reference frame is contained in the device and whether device motion is available
         if (CMMotionManager.availableAttitudeReferenceFrames().contains(referenceFrame) && motionManager.isDeviceMotionAvailable) {
@@ -175,7 +165,7 @@ class ViewModel: NSObject, ObservableObject, WKExtendedRuntimeSessionDelegate, C
             print("No location updates received.")
             return
         }
-        //Reduces location update to every 12 s
+        //Reduces location update to every 12 seconds (increases frequency of data collection for better results)
         locationManager?.desiredAccuracy = kCLLocationAccuracyBestForNavigation
         locationManager?.distanceFilter = kCLDistanceFilterNone
         locationManager?.activityType = .fitness
@@ -250,7 +240,7 @@ class ViewModel: NSObject, ObservableObject, WKExtendedRuntimeSessionDelegate, C
         }
     
     
-    
+        //Helper function for fetchHeartRate function
         private func process(_ samples: [HKQuantitySample], type: HKQuantityTypeIdentifier) {
             // variable initialization
             var lastHeartRate = 0.0
@@ -284,19 +274,37 @@ class ViewModel: NSObject, ObservableObject, WKExtendedRuntimeSessionDelegate, C
             //Create the timestamp
             let timestamp = Date().timeIntervalSince1970
                         
-            // Get user acceleration, gyroscope, and magnetometer data from sensors using coremoiton
-            self.userAcceleration = motion.userAcceleration
-            self.watchAttitude = motion.attitude
-            self.magneticVector = motion.magneticField
+            // Get user acceleration, gyroscope, and magnetometer data from sensors using coremotion
+            // Check
+            if(sensorSpecifier.accelerometer == "true"){
+                self.userAcceleration = motion.userAcceleration
+            }
+            if(sensorSpecifier.gyroscope == "true"){
+                self.watchAttitude = motion.attitude
+            }
             
-            let newData = ModelSensorData( timestamp: timestamp, accelX: String(format: "%.5f", userAcceleration.x), accelY: String(format: "%.5f", userAcceleration.y),
-                                          accelZ: String(format: "%.5f", userAcceleration.z), gyroX: String(format: "%.5f",  watchAttitude.pitch), gyroY: String(format: "%.5f",  watchAttitude.yaw),
-                                          gyroZ: String(format: "%.5f",  watchAttitude.roll), magX: String(format: "%.5f", magneticVector.field.x), magY: String(format: "%.5f",magneticVector.field.y),
-                                           magZ: String(format: "%.5f", magneticVector.field.z), heartbeat: "\(publishedHeartRate)",latitude: "\(latitude)", longitude: "\(longitude)", course: "\(course)", speed:"\(speed)", speedAccuracy: "\(speedAccuracy)",
-                                           courseAccuracy: "\(courseAccuracy)", altitude: "\(altitude)", altitudeAccuracy: "\(altitudeAccuracy)",coordinateAccuracy: "\(coordinateAccuracy)", heading: "\(heading)", headingAccuracy: "\(headingAccuracy)")
-                                            
-//                                        )
-                
+            if(sensorSpecifier.magnetometer == "true"){
+                self.magneticVector = motion.magneticField
+            }
+            
+            // Assign values conditionally
+            let accelXin = (sensorSpecifier.accelerometer == "true") ? String(format: "%.5f", userAcceleration.x) : "N/A"
+            let accelYin = (sensorSpecifier.accelerometer == "true") ? String(format: "%.5f", userAcceleration.y) : "N/A"
+            let accelZin = (sensorSpecifier.accelerometer == "true") ? String(format: "%.5f", userAcceleration.z) : "N/A"
+
+            let gyroXin = (sensorSpecifier.gyroscope == "true") ? String(format: "%.5f", watchAttitude.pitch) : "N/A"
+            let gyroYin = (sensorSpecifier.gyroscope == "true") ? String(format: "%.5f", watchAttitude.yaw) : "N/A"
+            let gyroZin = (sensorSpecifier.gyroscope == "true") ? String(format: "%.5f", watchAttitude.roll) : "N/A"
+
+            let magXin = (sensorSpecifier.magnetometer == "true") ? String(format: "%.5f", magneticVector.field.x) : "N/A"
+            let magYin = (sensorSpecifier.magnetometer == "true") ? String(format: "%.5f", magneticVector.field.y) : "N/A"
+            let magZin = (sensorSpecifier.magnetometer == "true") ? String(format: "%.5f", magneticVector.field.z) : "N/A"
+            
+            let newData = ModelSensorData( timestamp: timestamp, accelX: accelXin, accelY: accelYin, accelZ: accelZin, gyroX: gyroXin, gyroY: gyroYin, gyroZ: gyroZin, magX: magXin, magY: magYin,magZ: magZin,
+                                           heartbeat: "\(publishedHeartRate)",latitude: "\(latitude)", longitude: "\(longitude)", course: "\(course)", speed:"\(speed)", speedAccuracy: "\(speedAccuracy)",
+                                           courseAccuracy: "\(courseAccuracy)", altitude: "\(altitude)", altitudeAccuracy: "\(altitudeAccuracy)",coordinateAccuracy: "\(coordinateAccuracy)", heading: "\(heading)",
+                                           headingAccuracy: "\(headingAccuracy)")
+
             sensorData = [newData]
             context.insert(newData)
         }
@@ -402,7 +410,5 @@ class ViewModel: NSObject, ObservableObject, WKExtendedRuntimeSessionDelegate, C
             }
             stopCollectingSensorData()
         }
-    
-
     
 }

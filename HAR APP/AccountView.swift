@@ -11,13 +11,7 @@ struct AccountView: View {
     @State private var firstName = ""
     @State private var lastName = ""
     @State private var birthdate = Date()
-    
-    @State  private var accelerometer = true;
-    @State private var gyroscope = true;
-    @State private var magnetometer = true;
-    @State private var gps = true;
-    @State private var heartRateSensor = true;
-    @State private var music = false;
+    @ObservedObject var preferencesModel: Preferences
     
     @ObservedObject var loginModel: loginModel
     
@@ -40,12 +34,16 @@ struct AccountView: View {
                     
                 }
                 Section(header: Text("Preferences")){
-                    Toggle("Accelerometer", isOn: $accelerometer)
-                    Toggle("Magnetometer", isOn: $magnetometer)
-                    Toggle("Gyroscope", isOn: $gyroscope)
-                    Toggle("Location Services: GPS", isOn: $gps)
-                    Toggle("Heart Rate Sensor", isOn: $heartRateSensor)
-                    Toggle("Music Listening Monitoring", isOn: $music)
+                    Toggle("Accelerometer", isOn: $preferencesModel.accelerometer)
+                    Toggle("Magnetometer", isOn: $preferencesModel.magnetometer)
+                    Toggle("Gyroscope", isOn: $preferencesModel.gyroscope)
+                    Toggle("Location Services: GPS", isOn: $preferencesModel.gps)
+                    Toggle("Heart Rate Sensor", isOn: $preferencesModel.heartRateSensor)
+                    VStack{
+                        Slider(value: $preferencesModel.sessionDuration, in: 10...600,step:5)
+                        Text("Session Duration in Seconds: \(Int (preferencesModel.sessionDuration))")
+                    }
+                    
                     
                 }
             }
@@ -65,5 +63,5 @@ struct AccountView: View {
 
 
 #Preview {
-    AccountView(loginModel: loginModel())
+    AccountView(preferencesModel: Preferences(), loginModel: loginModel())
 }
