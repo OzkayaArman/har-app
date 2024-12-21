@@ -14,7 +14,6 @@ class WatchToIOSConnector: NSObject, WCSessionDelegate, ObservableObject {
     
     private var context: ModelContext?
     
-    
     //The object that initiates communication between a Watch app and its companion iOS app.
     var session: WCSession
     
@@ -26,7 +25,6 @@ class WatchToIOSConnector: NSObject, WCSessionDelegate, ObservableObject {
         super.init()
         session.delegate = self
         session.activate()
-        print("Constructor watch")
     }
     
     func setContext(_ context: ModelContext) {
@@ -40,6 +38,26 @@ class WatchToIOSConnector: NSObject, WCSessionDelegate, ObservableObject {
         }
     }
     
+    func sendConfirmationBack(){
+        do {
+            // Convert the message into JSON
+            let encoder = JSONEncoder()
+            encoder.outputFormatting = .prettyPrinted
+            let confirmation: [String: String] = ["status": "commandReceived"]
+            let jsonData = try encoder.encode(confirmation)
+
+            // Save the JSON data to a temporary file for transfer
+            let tempFileURL = FileManager.default.temporaryDirectory.appendingPathComponent("SensorData.json")
+            try jsonData.write(to: tempFileURL)
+            
+            // Transfer the file to the iPhone
+            session.transferFile(tempFileURL, metadata: ["status":"commandReceived"])
+            print("Confirmation sent to iPhone via file transfer: \(tempFileURL)")
+            
+        } catch {
+            print("Error sending confirmation back: \(error.localizedDescription)")
+        }
+    }
     
     func sendDataToIOS() {
         // Ensure the context is available
@@ -70,10 +88,12 @@ class WatchToIOSConnector: NSObject, WCSessionDelegate, ObservableObject {
             // Save the JSON data to a temporary file for transfer
             let tempFileURL = FileManager.default.temporaryDirectory.appendingPathComponent("SensorData.json")
             try jsonData.write(to: tempFileURL)
+            
 
             // Transfer the file to the iPhone
-            session.transferFile(tempFileURL, metadata: nil)
+           session.transferFile(tempFileURL, metadata: ["status":"fileReceived"])
             print("Data sent to iPhone via file transfer: \(tempFileURL)")
+            
         } catch {
             print("Error fetching or encoding sensor data: \(error.localizedDescription)")
         }
@@ -97,8 +117,11 @@ class WatchToIOSConnector: NSObject, WCSessionDelegate, ObservableObject {
                 if(receivedData.message == "Start"){
                     // Method to handle received sensor data
                     print("Preferences data was received")
+                    self.sendConfirmationBack()
                     self.viewModel?.setPreferences(preferencesIn: receivedData)
+                    
                 }else{
+                    self.sendConfirmationBack()
                     self.viewModel?.stopCollectingSensorData()
                 }
             }

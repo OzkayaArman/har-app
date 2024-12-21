@@ -312,9 +312,6 @@ class ViewModel: NSObject, ObservableObject, WKExtendedRuntimeSessionDelegate, C
     
     //This function sends the data to IOS application
     func stopCollectingSensorData() {
-        //Send the sensor data to IOS application
-        watchToIOSConnector.sendDataToIOS()
-        
         //Unwrap optional and stop heart rate data collection
         if let query = heartRateQuery {
             healthStore.stop(query)
@@ -362,6 +359,9 @@ class ViewModel: NSObject, ObservableObject, WKExtendedRuntimeSessionDelegate, C
                 
             )
         ]
+        
+        //Send the sensor data to IOS application
+        watchToIOSConnector.sendDataToIOS()
         
         //Reset the swift data context to prevent data spillage when a new activity recording session is started
         

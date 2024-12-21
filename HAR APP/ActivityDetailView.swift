@@ -58,10 +58,8 @@ struct ActivityDetailView: View {
                 .onReceive(timer) { time in
                     if (preferencesModel.sessionDurationView == 0){
                         timer.upstream.connect().cancel()
-                        preferencesModel.sessionDurationView = preferencesModel.sessionDuration
-                        startActivity = false
                         //Call clean sensor data function
-                        viewModel.cleanSensorData()
+                        viewModel.watchConnector.sendCommandToWatch(data: "Stop")
                     } else if (preferencesModel.sessionDurationView  > 0 && startActivity == true){
                         preferencesModel.sessionDurationView  -= 1
                     }
@@ -111,28 +109,10 @@ struct ButtonView: View {
     
     var body: some View {
         Button {
-            //Status holds a bool value that tells whether the command to watch was able to be sent
-            let status = viewModel.watchConnector.sendCommandToWatch(data: commandToSend)
-            
-            //Handle specific events depending on start and stop command
-            if(commandToSend == "Start"){
-                if(status){
-                    startActivity = true
-                }else{
-                    showAlertConnectivity = true
-                }
-            }else{
-                if(status){
-                    startActivity = false
-                    countdown = preferencesModel.sessionDuration
-                    //Call clean sensor data function
-                    viewModel.cleanSensorData()
-                }else{
-                    showAlertConnectivity = true
-                }
+            let response = viewModel.watchConnector.sendCommandToWatch(data: commandToSend)
+            if(!response){
+                showAlertConnectivity = true
             }
-            
-
         } label:{
             Label(labelString, systemImage: systemImageString)
         }
@@ -140,6 +120,23 @@ struct ButtonView: View {
         .tint(labelString == "Start Activity" ? .green : .red)
         .controlSize(.large)
         .padding(.bottom)
+        .onChange(of: viewModel.receivedConfirmation){
+            if(viewModel.receivedConfirmation){
+                print("IN CLOSUREEEE")
+                //Handle specific events depending on start and stop command
+                if(commandToSend == "Start"){
+                    startActivity = true
+                    viewModel.receivedConfirmation.toggle()
+                    
+                }else{
+                    startActivity = false
+                    countdown = preferencesModel.sessionDuration
+                    //Call clean sensor data function
+                    viewModel.cleanSensorData()
+                    viewModel.receivedConfirmation.toggle()
+                }
+            }
+        }
     }
 }
 

@@ -41,6 +41,8 @@ struct SensorData: Codable, Identifiable {
     final class ActivitiesViewModel: ObservableObject {
         
         @Published var exportReady = false
+        @Published var receivedConfirmation = false
+        
         var preferencesModel: Preferences
         
         var sensorData: [SensorData] = []

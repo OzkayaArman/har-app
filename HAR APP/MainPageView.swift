@@ -34,7 +34,6 @@ struct MainPageView: View {
             _preferencesModel = StateObject(wrappedValue: prefs)
             
             _viewModel = StateObject(wrappedValue: vm)
-            print("AAAA")
     }
     
     var body: some View {
