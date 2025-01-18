@@ -54,21 +54,10 @@
 		CBEFCE9B2CF61A2C007012AD /* WatchHARApp Watch App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = "WatchHARApp Watch App.entitlements"; path = "WatchHARApp Watch App/WatchHARApp Watch App.entitlements"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		CBCD75982D0B6D9E00BC990B /* Exceptions for "WatchHARApp Watch App" folder in "HAR APP" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				PreferencesModel.swift,
-			);
-			target = CB05392D2CACA01E00864980 /* HAR APP */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		CB0539302CACA01E00864980 /* HAR APP */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			name = "HAR APP";
-			path = "../HAR APP";
+			path = "HAR APP";
 			sourceTree = "<group>";
 		};
 		CB12AFF82D05EEF400D5F251 /* HAR_APP_Unit_Tests */ = {
@@ -78,11 +67,7 @@
 		};
 		CBD7868F2CD6CECE0034A24C /* WatchHARApp Watch App */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				CBCD75982D0B6D9E00BC990B /* Exceptions for "WatchHARApp Watch App" folder in "HAR APP" target */,
-			);
-			name = "WatchHARApp Watch App";
-			path = "../WatchHARApp Watch App";
+			path = "WatchHARApp Watch App";
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -144,7 +129,7 @@
 				CBD7868F2CD6CECE0034A24C /* WatchHARApp Watch App */,
 				CBD786BE2CD6CF340034A24C /* Frameworks */,
 			);
-			path = "Overall App";
+			name = "Overall App";
 			sourceTree = "<group>";
 		};
 		CBD786BE2CD6CF340034A24C /* Frameworks */ = {
