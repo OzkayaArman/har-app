@@ -22,10 +22,13 @@ struct MainPageView: View {
     @StateObject var preferencesModel: Preferences
     @StateObject var viewModel: ActivitiesViewModel
     
+
     
-    //Creating instance of Preferences class which will be passed down in view hierarchy
-    //Creating instance of viewModel class which will be passed down in view hierarchy
-    //GAP: The code for the initializer below was obtained from ChatGPT
+    /*
+    Creating instance of Preferences class which will be passed down in view hierarchy
+    Creating instance of viewModel class which will be passed down in view hierarchy
+    GAP: The code for the initializer below was obtained from ChatGPT
+    */
     init() {
             let prefs = Preferences()
 
@@ -38,31 +41,31 @@ struct MainPageView: View {
     
     var body: some View {
         
-        
-        if(login.authenticated){
-            TabView{
-                ActivityGridView(viewModel: viewModel,login:login,activityList: activityList, preferencesModel: preferencesModel)
-                    .navigationTitle("Home")
-                    .tabItem{
-                        Image(systemName: "house" )
-                        Text("Home")
-                    }
+        if (login.authenticated){
             
-                AccountView(preferencesModel: preferencesModel, loginModel:login)
-                    .navigationTitle("Account & Preferences")
-                    .tabItem {
-                        Image(systemName: "person")
-                        Text("Account & Preferences")
-                    }
-                
-            }.accentColor(Color("selectColor"))
+                TabView{
+                    ActivityGridView(viewModel: viewModel,login:login,activityList: activityList, preferencesModel: preferencesModel)
+                        .navigationTitle("Home")
+                        .tabItem{
+                            Image(systemName: "house" )
+                            Text("Home")
+                        }
+                    
+                    AccountView(preferencesModel: preferencesModel, loginModel:login)
+                        .navigationTitle("Account & Preferences")
+                        .tabItem {
+                            Image(systemName: "person")
+                            Text("Account & Preferences")
+                        }
+                    
+                }
+                .accentColor(Color("selectColor"))
         }else{
             LoginPageView(login: login)
         }
-                
             
     }
-}
+} // End of main page view
 
 //Activity grid view initializes and passes the viewModel to ActivityDetailView
 struct ActivityGridView: View {
@@ -163,7 +166,7 @@ struct NewActivitySheet: View {
                 .fontWeight(.semibold)
                 .padding(.top)
             
-            Text("Once you click the save new activity button, you will be navigatedd back to the home page. Then, you can start sensor recordings for your new activity type by tapping on the icon for the new activity type you specified.")
+            Text("Once you click the save new activity button, you will be navigated to back to the home page. Then, you can start sensor recordings for your new activity type by tapping on the icon for the new activity type you specified.")
                 .font(.subheadline)
                 .fontWeight(.medium)
                 .padding()

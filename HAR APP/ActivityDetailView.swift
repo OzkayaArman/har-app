@@ -16,6 +16,7 @@ struct ActivityDetailView: View {
     @ObservedObject var loginModel: loginModel
     @ObservedObject var preferencesModel: Preferences
     
+    @State private var shouldTabHide = false
     @State private var startActivity = false
     @State private var showingExporter = false
     @State private var showConfirmation = false
@@ -72,7 +73,7 @@ struct ActivityDetailView: View {
                 //Start Activity Button
     
                 ButtonView(labelString: "Start Activity", systemImageString: "play.fill", commandToSend: "Start",
-                           startActivity: $startActivity, countdown: $preferencesModel.sessionDurationView, showAlertConnectivity: $showAlertConnectivity, viewModel: viewModel, preferencesModel: preferencesModel)
+                           startActivity: $startActivity, shouldTabHide: $shouldTabHide, countdown: $preferencesModel.sessionDurationView, showAlertConnectivity: $showAlertConnectivity, viewModel: viewModel, preferencesModel: preferencesModel)
                 .alert(isPresented: $showAlertConnectivity) {
                             Alert(
                                 title: Text("Oops"),
@@ -84,15 +85,16 @@ struct ActivityDetailView: View {
                 //Stop Activity Button
                 
                 ButtonView(labelString: "Stop Activity", systemImageString: "stop.fill", commandToSend: "Stop",
-                           startActivity: $startActivity, countdown: $preferencesModel.sessionDurationView ,showAlertConnectivity: $showAlertConnectivity, viewModel: viewModel, preferencesModel: preferencesModel)
-                
+                           startActivity: $startActivity, shouldTabHide: $shouldTabHide, countdown: $preferencesModel.sessionDurationView ,showAlertConnectivity: $showAlertConnectivity, viewModel: viewModel, preferencesModel: preferencesModel)
             }
             
-            if(viewModel.exportReady){
-                ExportView(viewModel: viewModel, loginModel: loginModel, activity: activity, csvFile: $csvFile, showingExporter: $showingExporter, showConfirmation: $showConfirmation)
+            if (viewModel.exportReady){
+                ExportView(viewModel: viewModel, loginModel: loginModel, activity: activity, csvFile: $csvFile, showingExporter: $showingExporter, showConfirmation: $showConfirmation,shouldTabHide: $shouldTabHide)
             }
         
-        }.navigationBarBackButtonHidden(startActivity)
+        }
+        .navigationBarBackButtonHidden(shouldTabHide)
+        .toolbar(shouldTabHide ? .hidden : .visible, for: .tabBar)
     }//End of activity Detail View
 }
 
@@ -102,8 +104,10 @@ struct ButtonView: View {
     var systemImageString: String
     var commandToSend : String
     @Binding var startActivity: Bool
+    @Binding var shouldTabHide: Bool
     @Binding var countdown: Double
     @Binding var showAlertConnectivity:Bool
+    
     @ObservedObject var viewModel: ActivitiesViewModel
     @ObservedObject var preferencesModel: Preferences
     
@@ -122,12 +126,11 @@ struct ButtonView: View {
         .padding(.bottom)
         .onChange(of: viewModel.receivedConfirmation){
             if(viewModel.receivedConfirmation){
-                print("IN CLOSUREEEE")
                 //Handle specific events depending on start and stop command
                 if(commandToSend == "Start"){
+                    shouldTabHide = true
                     startActivity = true
                     viewModel.receivedConfirmation.toggle()
-                    
                 }else{
                     startActivity = false
                     countdown = preferencesModel.sessionDuration
@@ -168,6 +171,7 @@ struct ExportView: View {
     @Binding var csvFile: CSVFile?
     @Binding var showingExporter: Bool
     @Binding var showConfirmation: Bool
+    @Binding var shouldTabHide: Bool
     
     var body: some View {
         Button(){
@@ -188,11 +192,13 @@ struct ExportView: View {
             switch result {
             case .success(let url):
                 print("CSV file saved successfully at: \(url)")
+                shouldTabHide = false
                 viewModel.exportReady = false
                 showingExporter = false
                 showConfirmation = true;
             case .failure(let error):
                 print("Error saving CSV file: \(error.localizedDescription)")
+                shouldTabHide = false
                 viewModel.exportReady = false
                 showingExporter = false
             }
@@ -202,5 +208,6 @@ struct ExportView: View {
 
 
 #Preview {
+    
     ActivityDetailView(activity: ActivityMetaData().sampleActivity, viewModel: ActivitiesViewModel(preferencesModel: Preferences()),loginModel: loginModel(), preferencesModel: Preferences())
 }
