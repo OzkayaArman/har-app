@@ -109,6 +109,13 @@ class WatchToIOSConnector: NSObject, WCSessionDelegate, ObservableObject {
             // Read the data from the received file URL
             let data = try Data(contentsOf: file.fileURL)
             
+            // Convert data to a string for debugging
+            if let jsonString = String(data: data, encoding: .utf8) {
+                print("Raw JSON Data:\n\(jsonString)")
+            } else {
+                print("Failed to convert data to string.")
+            }
+            
             // Attempt to decode the data as an array of SensorData
             let receivedData = try JSONDecoder().decode(PreferencesData.self, from: data)
             

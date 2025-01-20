@@ -14,8 +14,9 @@ final class NewActivityAdditionTests: XCTestCase {
         //Arrange
         let login =  loginModel()
         let activityList = ActivityMetaData()
-        let viewModel = ActivitiesViewModel()
-        let activityGridView = ActivityGridView(viewModel: viewModel, login: login, activityList: activityList)
+        let prefs = Preferences()
+        let viewModel = ActivitiesViewModel(preferencesModel: prefs)
+        let activityGridView = ActivityGridView(viewModel: viewModel, login: login, activityList: activityList, preferencesModel: prefs)
         @State var addingNewActivity = false
         //Act
         @State var newActivityName = "Rugby"
@@ -33,8 +34,9 @@ final class NewActivityAdditionTests: XCTestCase {
         //Arrange
         let login =  loginModel()
         let activityList = ActivityMetaData()
-        let viewModel = ActivitiesViewModel()
-        let activityGridView = ActivityGridView(viewModel: viewModel, login: login, activityList: activityList)
+        let prefs = Preferences()
+        let viewModel = ActivitiesViewModel(preferencesModel: prefs)
+        let activityGridView = ActivityGridView(viewModel: viewModel, login: login, activityList: activityList, preferencesModel: prefs)
         @State var addingNewActivity = false
         
         //Act
@@ -55,8 +57,9 @@ final class NewActivityAdditionTests: XCTestCase {
         //Arrange
         let login =  loginModel()
         let activityList = ActivityMetaData()
-        let viewModel = ActivitiesViewModel()
-        let activityGridView = ActivityGridView(viewModel: viewModel, login: login, activityList: activityList, newActivityName:"Rugby")
+        let prefs = Preferences()
+        let viewModel = ActivitiesViewModel(preferencesModel: prefs)
+        let activityGridView = ActivityGridView(viewModel: viewModel, login: login, activityList: activityList, preferencesModel: prefs, newActivityName:"Rugby")
         activityGridView.didDismiss()
         
         // Assert

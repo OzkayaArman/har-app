@@ -19,5 +19,6 @@ class Preferences: ObservableObject {
             sessionDurationView = sessionDuration
         }
     }
-        @Published var sessionDurationView: Double = 180    
+    @Published var sessionDurationView: Double = 180
+    @Published var samplingRate: Double = 30
 }

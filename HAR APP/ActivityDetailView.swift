@@ -23,8 +23,8 @@ struct ActivityDetailView: View {
     @State private var showAlertConnectivity = false
     @State private var csvFile: CSVFile?
    
-    
-    let timer = Timer.publish(every: 1,tolerance: 0.5, on: .main, in: .common).autoconnect()
+    //No tolerance in timer firing so that correctness is achieved, may sacrifice on energy efficiency
+    let timer = Timer.publish(every: 1,tolerance: 0.0, on: .main, in: .common).autoconnect()
 
     
     var body: some View {
@@ -59,7 +59,6 @@ struct ActivityDetailView: View {
                 .onReceive(timer) { time in
                     if (preferencesModel.sessionDurationView == 0){
                         timer.upstream.connect().cancel()
-                        //Call clean sensor data function
                         viewModel.watchConnector.sendCommandToWatch(data: "Stop")
                     } else if (preferencesModel.sessionDurationView  > 0 && startActivity == true){
                         preferencesModel.sessionDurationView  -= 1

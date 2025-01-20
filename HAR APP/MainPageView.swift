@@ -121,14 +121,15 @@ struct ActivityGridView: View {
     
     //Executed when sheet is dismissed to add the new activity to the data array
     func didDismiss() {
-        activityList.activityArray.append(
-            Activities(name: newActivityName, imageName: "trophy.circle.fill")
-        )
-            // Clear the input field for future activity additions
-            newActivityName = ""
-        
+        if (newActivityName != ""){
+            activityList.activityArray.append(
+                Activities(name: newActivityName, imageName: "trophy.circle.fill")
+            )
+                // Clear the input field for future activity additions
+                newActivityName = ""
+            
+        }
     }
-    
 }
 
 struct NewActivitySheet: View {

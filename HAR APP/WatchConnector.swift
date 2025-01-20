@@ -68,7 +68,7 @@ class WatchConnector: NSObject, WCSessionDelegate, ObservableObject{
                     }
                     // Attempt to decode the data as an array of SensorData
                     let receivedData = try JSONDecoder().decode([SensorData].self, from: data)
-                
+                    
                     // Pass the decoded sensor data array to your ActivitiesViewModel
                     DispatchQueue.main.async {
                         // Method to handle received sensor data
@@ -106,7 +106,8 @@ class WatchConnector: NSObject, WCSessionDelegate, ObservableObject{
                         "magnetometer" : "\(preferencesModel.magnetometer)",
                         "gps" : "\(preferencesModel.gps)",
                         "heartRateSensor" : "\(preferencesModel.heartRateSensor)",
-                        "sessionDuration" : "\(preferencesModel.sessionDuration)"
+                        "sessionDuration" : "\(preferencesModel.sessionDuration)",
+                        "samplingRate" : "\(preferencesModel.samplingRate)"
                     ]
                     
                     let encoder = JSONEncoder()
@@ -122,7 +123,7 @@ class WatchConnector: NSObject, WCSessionDelegate, ObservableObject{
                     print("Stop command sent to watch via file transfer: \(tempFileURL)")
                     return true
                 }else{
-                    if session.isReachable {
+                    if (session.isReachable) {
                         //If sending start command
                         let data: [String: String] = [
                             "message": data,
@@ -131,7 +132,8 @@ class WatchConnector: NSObject, WCSessionDelegate, ObservableObject{
                             "magnetometer" : "\(preferencesModel.magnetometer)",
                             "gps" : "\(preferencesModel.gps)",
                             "heartRateSensor" : "\(preferencesModel.heartRateSensor)",
-                            "sessionDuration" : "\(preferencesModel.sessionDuration)"
+                            "sessionDuration" : "\(preferencesModel.sessionDuration)",
+                            "samplingRate" : "\(preferencesModel.samplingRate)"
                         ]
                         
                         let encoder = JSONEncoder()

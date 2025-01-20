@@ -15,6 +15,7 @@ struct PreferencesData: Codable {
     var gps: String
     var heartRateSensor: String
     var sessionDuration: String
+    var samplingRate: String
 }
 
 

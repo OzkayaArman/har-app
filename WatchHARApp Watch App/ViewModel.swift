@@ -65,7 +65,7 @@ class ViewModel: NSObject, ObservableObject, WKExtendedRuntimeSessionDelegate, C
     //Constructor for the ViewModel which also initializes an instance of the watchToIOSConnector
     override init() {
         //This is a dummy initialization step, the real preferences are relayed when the user taps start activity button on the ios app.
-        sensorSpecifier = PreferencesData(message: "Start", accelerometer: "true", gyroscope: "true", magnetometer: "true" , gps: "true", heartRateSensor: "true", sessionDuration: "180.0")
+        sensorSpecifier = PreferencesData(message: "Start", accelerometer: "true", gyroscope: "true", magnetometer: "true" , gps: "true", heartRateSensor: "true", sessionDuration: "180.0", samplingRate: "30")
         
         //Initialize watchToIOSConnector property, this property is an instance of WatchToIOSConnector class
         self.watchToIOSConnector = WatchToIOSConnector()
@@ -81,7 +81,7 @@ class ViewModel: NSObject, ObservableObject, WKExtendedRuntimeSessionDelegate, C
         locationManager = CLLocationManager()
     }
     
-    //Updates the preferences for which sensor will be utilized to collect data
+    //Updates the preferences for which sensor will be utilized to collect data and starts the chain of functions to collect data
     func setPreferences(preferencesIn: PreferencesData){
         self.sensorSpecifier = preferencesIn
         startCollectingSensorData()
@@ -113,7 +113,11 @@ class ViewModel: NSObject, ObservableObject, WKExtendedRuntimeSessionDelegate, C
         
         
         // Sets the update interval of sensor read to 30 Hz
-        motionManager.deviceMotionUpdateInterval = 1.0 / 30.0
+        guard let samplingRate = Double(sensorSpecifier.samplingRate) else{
+            print("Error in sampling rate determination")
+            return
+        }
+        motionManager.deviceMotionUpdateInterval = 1.0 / Double(samplingRate)
         
         //Variable that indicate the frame of reference for attitude-related motion data
         let referenceFrame = CMAttitudeReferenceFrame.xTrueNorthZVertical
@@ -121,6 +125,8 @@ class ViewModel: NSObject, ObservableObject, WKExtendedRuntimeSessionDelegate, C
         //Collect heart rate data if the preferences for collecting heart rate data was set
         if(sensorSpecifier.heartRateSensor == "true"){
             collectHeartRate()
+        }else{
+            publishedHeartRate = -1
         }
         
         //Collect GPS data if the preferences for collecting GPS data was set
@@ -129,6 +135,18 @@ class ViewModel: NSObject, ObservableObject, WKExtendedRuntimeSessionDelegate, C
             locationManager = CLLocationManager()
             locationManager?.delegate = self
             locationManager?.requestWhenInUseAuthorization()
+        }else {
+            latitude = -1
+            longitude = -1
+            course = -1
+            speed = -1
+            speedAccuracy = -1
+            courseAccuracy = -1
+            altitude = -1
+            altitudeAccuracy = -1
+            coordinateAccuracy = -1
+            heading = -1
+            headingAccuracy = -1
         }
        
         
@@ -169,8 +187,6 @@ class ViewModel: NSObject, ObservableObject, WKExtendedRuntimeSessionDelegate, C
         locationManager?.desiredAccuracy = kCLLocationAccuracyBestForNavigation
         locationManager?.distanceFilter = kCLDistanceFilterNone
         locationManager?.activityType = .fitness
-        print("Location updated: \(location)")
-        print("Speed: \(location.speed), Course: \(location.course)")
         
         //Location Information
         latitude = location.coordinate.latitude
@@ -275,14 +291,16 @@ class ViewModel: NSObject, ObservableObject, WKExtendedRuntimeSessionDelegate, C
             let timestamp = Date().timeIntervalSince1970
                         
             // Get user acceleration, gyroscope, and magnetometer data from sensors using coremotion
-            // Check
+            // Check whether accelerometer is selected to collect data
             if(sensorSpecifier.accelerometer == "true"){
                 self.userAcceleration = motion.userAcceleration
             }
+            // Check whether gyroscope is selected to collect data
             if(sensorSpecifier.gyroscope == "true"){
                 self.watchAttitude = motion.attitude
             }
             
+            // Check whether magnetometer is selected to collect data
             if(sensorSpecifier.magnetometer == "true"){
                 self.magneticVector = motion.magneticField
             }
@@ -329,8 +347,19 @@ class ViewModel: NSObject, ObservableObject, WKExtendedRuntimeSessionDelegate, C
         session?.invalidate()
         session = nil
         
-        //Reset the sensor data publisher for watch view
+        //Reset the sensor data publishers for watch view
         publishedHeartRate = 0;
+        latitude = 0
+        longitude = 0
+        course = 0
+        speed = 0
+        speedAccuracy = 0
+        courseAccuracy = 0
+        altitude = 0
+        altitudeAccuracy = 0
+        coordinateAccuracy = 0
+        heading = 0
+        headingAccuracy = 0
         
         sensorData = [
             ModelSensorData(

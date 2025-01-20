@@ -42,6 +42,8 @@ struct AccountView: View {
                     VStack{
                         Slider(value: $preferencesModel.sessionDuration, in: 10...600,step:5)
                         Text("Session Duration in Seconds: \(Int (preferencesModel.sessionDuration))")
+                        Slider(value: $preferencesModel.samplingRate, in: 5...100, step:5)
+                        Text("Sampling Rate Per Second: \(Int (preferencesModel.samplingRate))")
                     }
                     
                     
